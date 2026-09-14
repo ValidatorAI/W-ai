@@ -17,34 +17,41 @@ It also suggests secondary ownership for bot profiles (`project manager`, `busin
 1. Keep `delegator` focused on routing and coordination, not heavy domain operations.
 2. Keep write-heavy operational tools in `action`.
 3. Keep read-heavy knowledge and retrieval tools in `knowledge`.
-4. Keep conversational and room UX signaling in `normal message`.
+4. Keep `normal message` focused on capturing conversational content into OV, not sending direct user replies.
 5. Give bot profiles a specialized subset, not full platform-wide ownership.
 6. Route unclear or ambiguous tasks to `not_known_task` for triage before execution.
 7. Keep cron ownership as governance and delegation in `cron_profile`, not direct execution.
 8. Tag or name cron cards explicitly so recurring workflows are machine-detectable.
+9. Main profiles should interact with each other primarily through company kanban card assignment.
+
+## Responsibility Labels
+
+- `Primary`: default owner for the tool group; first routing choice.
+- `Secondary`: support owner; can use tools when context requires it.
+- `Not-Using`: profile should not use that tool group in normal operation.
 
 ## Main Profile Responsibilities
 
 | MCP Tool Group | Delegator | Action | Knowledge | Normal Message | Company | Company Project | Not Known Task | Cron Profile |
 |---|---|---|---|---|---|---|---|---|
 | Core (`hello`) | Secondary | Secondary | Secondary | Primary | Secondary | Secondary | Secondary | Secondary |
-| Room Interaction (`add_message`, `add_loading_message`, `edit_loading_message`, `delete_loading_message`, `add_action_message`) | Secondary | Primary | Primary | Primary | Secondary | Secondary | Primary | Secondary |
+| Room Interaction (`add_message`, `add_loading_message`, `edit_loading_message`, `delete_loading_message`, `add_action_message`) | Not-Using | Primary | Primary | Primary | Secondary | Secondary | Primary | Secondary |
 | Approval Requests (`add_approval_request`, `add_approve_request_with_message`, `approval_requests`, `get_approval_request`, `edit_approval_request`, `delete_approval_request`, `add_decision_message`) | Primary | Primary | Secondary | Secondary | Secondary | Secondary | Secondary | Secondary |
 | Company Home (mentions, blockers, AI confirm, outcomes review, knowledge proposals, material changes, decisions waiting + add/edit/list variants) | Primary | Secondary | Secondary | Secondary | Primary | Secondary | Secondary | Secondary |
-| Company Status (`company_status_period`, `add_company_status_period`, `edit_company_status_period`, `changes`, `decisions`, `dependencies`, `learnings`, `priorities`, `progress`, `risks`) | Secondary | Primary | Secondary | None | Primary | Secondary | Secondary | Secondary |
-| Project Milestones (`project_milestones`, `add_project_milestone`, `edit_project_milestone`, `delete_project_milestone`) | Secondary | Primary | Secondary | None | Secondary | Primary | Secondary | Secondary |
-| Project Bottlenecks (`project_bottlenecks`, `add_project_bottleneck`, `edit_project_bottleneck`, `delete_project_bottleneck`) | Secondary | Primary | Secondary | None | Secondary | Primary | Secondary | Secondary |
-| Project Todos (`project_todos`, `add_project_todo`, `edit_project_todo`, `delete_project_todo`) | Secondary | Primary | Secondary | None | Secondary | Primary | Secondary | Secondary |
-| Project All Hands (action items, decisions, takeaways + add/edit/delete/list variants) | Secondary | Primary | Secondary | None | Secondary | Primary | Secondary | Secondary |
-| Project Decision Records (`project_decision_records`, `add_project_decision_record`, `edit_project_decision_record`, `delete_project_decision_record`) | Secondary | Secondary | Primary | None | Secondary | Secondary | Secondary | Secondary |
-| Project Knowledge Items (`project_knowledge_items`, `add_project_knowledge_item`, `edit_project_knowledge_item`, `delete_project_knowledge_item`) | Secondary | Secondary | Primary | None | Secondary | Secondary | Secondary | Secondary |
-| Knowledge Summary Items (`knowledge_summary_items`, `add_knowledge_summary_item`, `edit_knowledge_summary_item`, `delete_knowledge_summary_item`) | None | Secondary | Primary | None | Secondary | Secondary | Secondary | Secondary |
-| Knowledge Activity Log (`knowledge_activity_log`, `add_knowledge_activity_log`, `edit_knowledge_activity_log`, `delete_knowledge_activity_log`) | None | Secondary | Primary | None | Secondary | Secondary | Secondary | Secondary |
-| External Knowledge Assets (`external_knowledge_assets`, `add_external_knowledge_asset`, `edit_external_knowledge_asset`, `delete_external_knowledge_asset`) | None | Secondary | Primary | None | Secondary | Secondary | Secondary | Secondary |
-| Project Obsidian Notes (`project_obsidian_note`, `add_project_obsidian_note`, `edit_project_obsidian_note`, `delete_project_obsidian_note`) | None | Secondary | Primary | None | Secondary | Secondary | Secondary | Secondary |
-| Tree Directory (`tree_based_project_directory_data`, `add_tree_based_project_directory_item`, `edit_tree_based_project_directory_item`, `delete_tree_based_project_directory_item`) | Secondary | Primary | Primary | None | Secondary | Primary | Secondary | Secondary |
-| Unclear Task Triage (classify unclear cards, request missing detail, delegate to best-fit owner) | Secondary | None | None | Secondary | Secondary | Secondary | Primary | Secondary |
-| Cron Card Governance (define cron card, review cron tags/names, delegate recurring work to non-cron owner) | Secondary | Secondary | Secondary | None | Secondary | Secondary | Secondary | Primary |
+| Company Status (`company_status_period`, `add_company_status_period`, `edit_company_status_period`, `changes`, `decisions`, `dependencies`, `learnings`, `priorities`, `progress`, `risks`) | Secondary | Primary | Secondary | Not-Using | Primary | Secondary | Secondary | Secondary |
+| Project Milestones (`project_milestones`, `add_project_milestone`, `edit_project_milestone`, `delete_project_milestone`) | Secondary | Primary | Secondary | Not-Using | Secondary | Primary | Secondary | Secondary |
+| Project Bottlenecks (`project_bottlenecks`, `add_project_bottleneck`, `edit_project_bottleneck`, `delete_project_bottleneck`) | Secondary | Primary | Secondary | Not-Using | Secondary | Primary | Secondary | Secondary |
+| Project Todos (`project_todos`, `add_project_todo`, `edit_project_todo`, `delete_project_todo`) | Secondary | Primary | Secondary | Not-Using | Secondary | Primary | Secondary | Secondary |
+| Project All Hands (action items, decisions, takeaways + add/edit/delete/list variants) | Secondary | Primary | Secondary | Not-Using | Secondary | Primary | Secondary | Secondary |
+| Project Decision Records (`project_decision_records`, `add_project_decision_record`, `edit_project_decision_record`, `delete_project_decision_record`) | Secondary | Secondary | Primary | Not-Using | Secondary | Secondary | Secondary | Secondary |
+| Project Knowledge Items (`project_knowledge_items`, `add_project_knowledge_item`, `edit_project_knowledge_item`, `delete_project_knowledge_item`) | Secondary | Secondary | Primary | Not-Using | Secondary | Secondary | Secondary | Secondary |
+| Knowledge Summary Items (`knowledge_summary_items`, `add_knowledge_summary_item`, `edit_knowledge_summary_item`, `delete_knowledge_summary_item`) | Not-Using | Secondary | Primary | Not-Using | Secondary | Secondary | Secondary | Secondary |
+| Knowledge Activity Log (`knowledge_activity_log`, `add_knowledge_activity_log`, `edit_knowledge_activity_log`, `delete_knowledge_activity_log`) | Not-Using | Secondary | Primary | Not-Using | Secondary | Secondary | Secondary | Secondary |
+| External Knowledge Assets (`external_knowledge_assets`, `add_external_knowledge_asset`, `edit_external_knowledge_asset`, `delete_external_knowledge_asset`) | Not-Using | Secondary | Primary | Not-Using | Secondary | Secondary | Secondary | Secondary |
+| Project Obsidian Notes (`project_obsidian_note`, `add_project_obsidian_note`, `edit_project_obsidian_note`, `delete_project_obsidian_note`) | Not-Using | Secondary | Primary | Not-Using | Secondary | Secondary | Secondary | Secondary |
+| Tree Directory (`tree_based_project_directory_data`, `add_tree_based_project_directory_item`, `edit_tree_based_project_directory_item`, `delete_tree_based_project_directory_item`) | Secondary | Primary | Primary | Not-Using | Secondary | Primary | Secondary | Secondary |
+| Unclear Task Triage (classify unclear cards, request missing detail, delegate to best-fit owner) | Secondary | Not-Using | Not-Using | Secondary | Secondary | Secondary | Primary | Secondary |
+| Cron Card Governance (define cron card, review cron tags/names, delegate recurring work to non-cron owner) | Secondary | Secondary | Secondary | Not-Using | Secondary | Secondary | Secondary | Primary |
 
 ## Suggested Skill Mapping by Profile
 
@@ -60,7 +67,7 @@ It also suggests secondary ownership for bot profiles (`project manager`, `busin
 - `material_changes`, `add_material_changes`, `edit_material_changes`
 - `outcomes_review`, `add_outcomes_review`, `edit_outcomes_review`
 - `knowledge_proposals`, `add_knowledge_proposals`, `edit_knowledge_proposals`
-- Minimal room signaling: `add_loading_message`, `edit_loading_message`, `delete_loading_message`, `add_message`
+- Room interaction tools are `Not-Using` for delegator; delegator routes instead of posting room interaction outputs.
 - Unclear-input handling: create a kanban card and assign to `not_known_task` when user intent is not clear enough for safe execution.
 - Cron handling: ensure cron tasks are tagged/named as cron cards and routed to a non-cron execution owner profile.
 
@@ -95,8 +102,9 @@ It also suggests secondary ownership for bot profiles (`project manager`, `busin
 
 ## `main/normal message` (must-have skills)
 
-- Conversational room output:
-- `add_message`, `add_loading_message`, `edit_loading_message`, `delete_loading_message`, `add_action_message`
+- Conversational content capture to OV:
+- store normalized message context and intent summary in OV
+- No direct user reply from this profile (`add_message` is Not-Using)
 - Optional lightweight reads only:
 - `approval_requests` (read only)
 - `mentions` (read only)
@@ -187,8 +195,238 @@ Primary tools:
 
 ## Routing and Card Lifecycle Rules
 
+- Explicit @mention passthrough is bot-only (`project manager`, `business analyst`, `market research`, `coder`, `ask from w`).
+- Explicit @mention of main profiles is not a direct command; delegator still classifies and routes to main profiles.
+- Main-profile delegation should occur through company kanban card assignment, not direct profile invocation.
 - Router fallback for unclear input: if user input is not clear enough, create a kanban card and assign it to `not_known_task` for triage.
 - `not_known_task` must determine what should be done for an unclear card and delegate the card to the proper owner profile.
 - Cron cards must be tagged or named as cron cards and should not be directly assigned to `cron_profile` as execution work.
-- `cron_profile` is responsible for defining cron cards, reviewing cron cards, delegating them to proper owner profiles, and creating follow-up cards for repetitive schedules.
+- `cron_profile` is responsible for defining cron cards, reviewing cron cards, reassigning them on company kanban to proper owner profiles, and creating follow-up cards for repetitive schedules.
+- Create/delete room and create/delete project tasks must also be delegated to `knowledge` so the OV structure stays consistent.
 - Preserve room/project/company context and include delegation rationale in card updates.
+
+## Workflow Diagrams
+
+### 1) Explicit Profile Mention Routing
+
+```mermaid
+flowchart TD
+	A[User message] --> B{Contains explicit @profile mention?}
+	B -- No --> C[Continue to intent classification workflow]
+	B -- Yes --> D{Mentioned profile type}
+	D -- Bot profile --> E[delegator forwards original message unchanged]
+	E --> F[project manager or business analyst or market research or coder or ask from w]
+	D -- Main profile --> G[delegator ignores direct main-profile command]
+	G --> C
+```
+
+### 2) Clear Intent Classification Routing
+
+```mermaid
+flowchart TD
+	A[Incoming request] --> B[delegator classifies intent]
+	B --> C{Request type}
+	C -- execution or delivery --> D[action via company kanban assignment]
+	C -- research or information --> E[knowledge via company kanban assignment]
+	C -- conversational content capture to OV --> F[normal message via company kanban assignment]
+	C -- company-level coordination --> G[company via company kanban assignment]
+	C -- project-level planning --> H[company_project via company kanban assignment]
+	C -- unclear --> I[not_known_task via company kanban assignment]
+	C -- recurring or scheduled --> J[cron_profile via company kanban assignment]
+	C -- create/delete room or project --> K[primary owner by intent]
+	K --> L[also assign linked card to knowledge for OV structure update]
+```
+
+### 3) Unclear Input Triage and Delegation
+
+```mermaid
+flowchart TD
+	A[Unclear user input] --> B[delegator creates kanban card]
+	B --> C[assign card to not_known_task]
+	C --> D[not_known_task triage]
+	D --> E{Best-fit owner}
+	E -- action --> F[reassign company kanban card to action]
+	E -- knowledge --> G[reassign company kanban card to knowledge]
+	E -- normal message OV capture --> H[reassign company kanban card to normal message]
+	E -- company --> I[reassign company kanban card to company]
+	E -- company_project --> J[reassign company kanban card to company_project]
+	E -- cron governance --> K[reassign company kanban card to cron_profile]
+	E -- still unclear --> L[request missing detail]
+```
+
+### 4) Company and Project Coordination Flow
+
+```mermaid
+flowchart TD
+	A[New card or initiative] --> B{Scope}
+	B -- company-wide --> C[company]
+	B -- project-specific --> D[company_project]
+	C --> E[align priorities blockers dependencies]
+	D --> F[align milestones todos bottlenecks]
+	E --> G{Needs execution?}
+	F --> G
+	G -- yes --> H[assign company kanban card to action]
+	G -- knowledge needed --> I[assign company kanban card to knowledge]
+	G -- OV conversational logging --> J[assign company kanban card to normal message]
+	D --> K{create/delete room or project?}
+	K -- yes --> I
+```
+
+### 5) Cron Card Lifecycle
+
+```mermaid
+flowchart TD
+	A[Recurring need detected] --> B[cron_profile defines if card is cron]
+	B --> C[tag or name card as cron]
+	C --> D[reassign company kanban card to non-cron owner]
+	D --> E{Owner profile}
+	E -- action --> F[action executes]
+	E -- knowledge --> G[knowledge executes]
+	E -- company --> H[company executes]
+	E -- company_project --> I[company_project executes]
+	F --> J{Is repetitive?}
+	G --> J
+	H --> J
+	I --> J
+	J -- yes --> K[create follow-up cron card for next run]
+	J -- no --> L[close card]
+```
+
+## Profile Tool Access Diagrams
+
+### `main/delegator`
+
+```mermaid
+flowchart LR
+	P[delegator] --> A[approval requests]
+	P --> B[company home signals]
+	P --> C[routing and kanban delegation]
+	P --> D[cron governance routing]
+	P -. Not-Using .-> E[room interaction tools]
+```
+
+### `main/action`
+
+```mermaid
+flowchart LR
+	P[action] --> A[company status tools]
+	P --> B[project todos milestones bottlenecks]
+	P --> C[project all hands tools]
+	P --> D[room interaction tools]
+	P --> E[action messages]
+```
+
+### `main/knowledge`
+
+```mermaid
+flowchart LR
+	P[knowledge] --> A[project knowledge items]
+	P --> B[knowledge summary and activity log]
+	P --> C[external knowledge assets]
+	P --> D[decision records and obsidian notes]
+	P --> E[tree directory data]
+	P --> F[room interaction tools]
+```
+
+### `main/normal message`
+
+```mermaid
+flowchart LR
+	P[normal message] --> A[OV conversational content update]
+	P --> B[lightweight reads: approval requests mentions]
+	P -. Not-Using .-> C[add_message]
+	P -. Not-Using .-> D[project and knowledge ownership tools]
+```
+
+### `main/company`
+
+```mermaid
+flowchart LR
+	P[company] --> A[company status tools]
+	P --> B[company home coordination signals]
+	P --> C[cross project alignment]
+	P --> D[assign tasks to other main profiles through company kanban]
+```
+
+### `main/company_project`
+
+```mermaid
+flowchart LR
+	P[company_project] --> A[project todos milestones bottlenecks]
+	P --> B[project all hands records]
+	P --> C[project sequencing and assignment]
+	P --> D[assign tasks to other main profiles through company kanban]
+	P --> E[cron tagged project work delegation]
+```
+
+### `main/not_known_task`
+
+```mermaid
+flowchart LR
+	P[not_known_task] --> A[unclear task triage]
+	P --> B[reassign cards through company kanban]
+	P --> C[approval read and decision relay]
+	P --> D[delegation to best fit owner]
+```
+
+### `main/cron_profile`
+
+```mermaid
+flowchart LR
+	P[cron_profile] --> A[cron definition and qualification]
+	P --> B[cron tag and naming governance]
+	P --> C[reassign cron cards through company kanban]
+	P --> D[follow up recurring card creation]
+	P -. Not-Using .-> E[direct profile invocation]
+```
+
+### `bots/project manager`
+
+```mermaid
+flowchart LR
+	P[project manager] --> A[project milestones todos bottlenecks]
+	P --> B[project all hands tools]
+	P --> C[company status: progress risks dependencies priorities]
+	P --> D[project decision records]
+```
+
+### `bots/business analyst`
+
+```mermaid
+flowchart LR
+	P[business analyst] --> A[project decision records]
+	P --> B[project knowledge and summary items]
+	P --> C[learnings changes dependencies risks]
+	P --> D[knowledge proposals and outcomes review]
+```
+
+### `bots/market research`
+
+```mermaid
+flowchart LR
+	P[market research] --> A[external knowledge assets]
+	P --> B[knowledge activity log]
+	P --> C[project knowledge and summary items]
+	P --> D[project obsidian notes]
+```
+
+### `bots/coder`
+
+```mermaid
+flowchart LR
+	P[coder] --> A[project todos for implementation]
+	P --> B[project bottlenecks for technical blockers]
+	P --> C[project decision records for technical ADRs]
+	P --> D[project knowledge and obsidian notes]
+	P --> E[tree based project directory data]
+```
+
+### `bots/ask from w`
+
+```mermaid
+flowchart LR
+	P[ask from w] --> A[add message]
+	P --> B[loading message lifecycle]
+	P --> C[approval requests read only relay]
+	P -. Not-Using .-> D[project and knowledge ownership tools]
+```
