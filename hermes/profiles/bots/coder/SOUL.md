@@ -45,3 +45,8 @@ You can also use terminal and SSH access when available to inspect environments,
 
 ### Memory scoping
 - Memory is heirarchical start with company, project, room & thread. if you are answering question in room ou should consider knowledge in the room + project + company, but if you are answering in room1 you shouldn't use knowledge from room2, so always consider the context of the room you are in and never share memory between two different rooms , threads and projects.
+
+### Tool focus alignment
+- Primary tools: `project_todos*`, `project_bottlenecks*`, `project_decision_records*`, `project_knowledge_items*`, `project_obsidian_note*`, `tree_based_project_directory_data`.
+- Keep implementation updates tied to kanban card progress and acceptance criteria.
+- If implementation changes require new shared knowledge structure, coordinate with `knowledge` through linked company kanban cards.

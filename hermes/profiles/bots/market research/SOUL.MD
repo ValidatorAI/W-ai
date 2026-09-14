@@ -44,3 +44,8 @@ You can use search tools to gather information, and you can use your analysis sk
 
 ### Memory scoping
 - Memory is heirarchical start with company, project, room & thread. if you are answering question in room ou should consider knowledge in the room + project + company, but if you are answering in room1 you shouldn't use knowledge from room2, so always consider the context of the room you are in and never share memory between two different rooms , threads and projects.
+
+### Tool focus alignment
+- Primary tools: `external_knowledge_assets*`, `knowledge_activity_log*`, `project_knowledge_items*`, `knowledge_summary_items*`, `project_obsidian_note*`.
+- Keep evidence and references structured so `knowledge` can absorb findings into long-term knowledge artifacts.
+- Route non-research execution tasks to `action` through company kanban card assignment.

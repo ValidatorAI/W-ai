@@ -432,3 +432,44 @@ flowchart LR
 	P --> C[approval requests read only relay]
 	P -. Not-Using .-> D[project and knowledge ownership tools]
 ```
+
+## Profile Interaction Graph (Kanban-Based)
+
+```mermaid
+flowchart TD
+	D[delegator] -->|assign card| A[action]
+	D -->|assign card| K[knowledge]
+	D -->|assign card| N[normal message]
+	D -->|assign card| C[company]
+	D -->|assign card| CP[company_project]
+	D -->|assign card| U[not_known_task]
+	D -->|assign card| CR[cron_profile]
+
+	C -->|reassign card| A
+	C -->|reassign card| K
+	C -->|reassign card| CP
+	C -->|reassign card| U
+
+	CP -->|reassign card| A
+	CP -->|reassign card| K
+	CP -->|reassign card| U
+	CP -->|tag cron and reassign| CR
+
+	U -->|triage and reassign| A
+	U -->|triage and reassign| K
+	U -->|triage and reassign| N
+	U -->|triage and reassign| C
+	U -->|triage and reassign| CP
+	U -->|cron governance| CR
+
+	CR -->|reassign cron card| A
+	CR -->|reassign cron card| K
+	CR -->|reassign cron card| C
+	CR -->|reassign cron card| CP
+
+	PM[project manager] -->|bot mention or delegated card| D
+	BA[business analyst] -->|bot mention or delegated card| D
+	MR[market research] -->|bot mention or delegated card| D
+	CD[coder] -->|bot mention or delegated card| D
+	AW[ask from w] -->|bot mention relay| D
+```
