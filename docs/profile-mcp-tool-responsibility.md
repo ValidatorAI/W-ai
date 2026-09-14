@@ -95,6 +95,7 @@ It also suggests secondary ownership for bot profiles (`project manager`, `busin
 - `external_knowledge_assets`, `add_external_knowledge_asset`, `edit_external_knowledge_asset`, `delete_external_knowledge_asset`
 - `project_decision_records`, `add_project_decision_record`, `edit_project_decision_record`, `delete_project_decision_record`
 - `project_obsidian_note`, `add_project_obsidian_note`, `edit_project_obsidian_note`, `delete_project_obsidian_note`
+- If Obsidian MCP is present, use it to maintain linked project knowledge structure in sync with knowledge records.
 - Directory/file context:
 - `tree_based_project_directory_data`, `add_tree_based_project_directory_item`, `edit_tree_based_project_directory_item`, `delete_tree_based_project_directory_item`
 - Collaboration essentials:
@@ -324,8 +325,9 @@ flowchart LR
 	P --> B[knowledge summary and activity log]
 	P --> C[external knowledge assets]
 	P --> D[decision records and obsidian notes]
-	P --> E[tree directory data]
-	P --> F[room interaction tools]
+	P --> E[obsidian MCP integration when available]
+	P --> F[tree directory data]
+	P --> G[room interaction tools]
 ```
 
 ### `main/normal message`
