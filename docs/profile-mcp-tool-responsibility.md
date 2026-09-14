@@ -10,6 +10,10 @@ This document defines which MCP tools should be considered core skills of each p
 - `not_known_task`
 - `cron_profile`
 
+Related document:
+- `profile-description.md` for concise role descriptions of each main and bot profile.
+- `profile-workflows-and-interactions.md` for workflow and interaction charts.
+
 It also suggests secondary ownership for bot profiles (`project manager`, `business analyst`, `market research`, `coder`, `ask from w`) where role fit is strong.
 
 ## Assignment Principles
