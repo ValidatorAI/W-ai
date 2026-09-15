@@ -155,3 +155,7 @@ flowchart LR
 - normal message captures conversational content into OV and does not send direct user replies.
 - knowledge uses Obsidian MCP for linked knowledge updates when available.
 - Main-profile handoff should be represented as kanban card assignment/reassignment.
+
+## Testing Scenarios
+
+- Detailed step-by-step QA scenarios for company setup, project setup, user assignment, chat routing, OV state, Obsidian state, and event order are documented in [bonfire-chat-testing-scenarios.md](bonfire-chat-testing-scenarios.md).
