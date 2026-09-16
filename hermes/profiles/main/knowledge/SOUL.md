@@ -86,3 +86,100 @@ Project knowledge paths must be rooted at:
 
 - Memory hierarchy is source-of-truth for lookup and reasoning.
 - When calling APIs, map memory paths to implemented routes (for example /company/[company_id]/projects/[project_id]/knowledge/items -> /api/projects/[project_id]/knowledge_items).
+
+## Appended Bonfire Page Knowledge Sections (2026-09-16)
+
+This block is derived from W-ai/hermes/shared/profile-knowledge-sections.md and scoped for this profile.
+
+### SECTION-PK-01: Project Knowledge and ADR Navigation
+
+#### Intent
+Maintain discoverable project memory across notes, assets, ADRs, directory items, and activity.
+
+#### Trigger
+Use when users need documentation lookup, ADR review, knowledge traceability, or file-based reference context.
+
+#### Expected Behavior
+1. Locate the right knowledge source (Obsidian note, external asset, ADR, directory file, or activity).
+2. Provide concise context summary and relevant links/paths.
+3. Preserve safe file access and path validation.
+4. Route implementation follow-ups to execution profiles when needed.
+
+#### Key Entities
+- ProjectObsidianNote
+- ProjectExternalAsset
+- ProjectAdr
+- ProjectDirectoryItem
+- ProjectKnowledgeActivity
+
+#### Boundaries
+- Do not bypass safe path constraints for file preview.
+- Do not substitute status tracking for documentation management.
+
+#### Example Task Framing
+"Use Project Knowledge to retrieve the latest ADR and supporting playbooks before implementation planning."
+
+#### Related Profiles
+- Main: knowledge, company_project, normal message
+- Bot: business analyst, market research, coder
+
+### SECTION-PA-01: Project All-Hands Decision and Action Ledger
+
+#### Intent
+Capture team sync outcomes as accountable actions and decisions.
+
+#### Trigger
+Use when users request meeting recap, action item follow-up, or decision rationale review.
+
+#### Expected Behavior
+1. Read active summary and key takeaways.
+2. Review pending action items and ownership.
+3. Validate recorded decisions with rationale and impact.
+4. Update completion state and route unresolved items to execution owners.
+
+#### Key Entities
+- ProjectAllHandsTakeaway
+- ProjectAllHandsActionItem
+- ProjectAllHandsDecision
+- Project
+
+#### Boundaries
+- Do not let action items remain ownerless.
+- Do not store long-form knowledge here when it belongs in Project Knowledge.
+
+#### Example Task Framing
+"Review All-Hands outputs, close completed items, and assign unresolved decisions to owners."
+
+#### Related Profiles
+- Main: action, company_project, cron_profile, knowledge
+- Bot: project manager, business analyst, coder
+
+### SECTION-CS-01: Company Status Period Review
+
+#### Intent
+Maintain a period-based company narrative for priorities, risk, dependencies, and decisions.
+
+#### Trigger
+Use when users request monthly/periodic company health, executive summary, or cross-project alignment.
+
+#### Expected Behavior
+1. Select the correct status period before analysis.
+2. Summarize priorities, progress, risks, dependencies, changes, decisions, and learnings.
+3. Highlight impact and ownership for each major status signal.
+4. Route execution follow-ups to project-level owners and trackers.
+
+#### Key Entities
+- CompanyStatusPeriod
+- CompanyStatusItem
+
+#### Boundaries
+- Do not collapse detailed execution tracking into this page.
+- Do not publish status without period context.
+
+#### Example Task Framing
+"Prepare a company status summary for the current period with top risks, decisions, and dependency actions."
+
+#### Related Profiles
+- Main: company, company_project, cron_profile, knowledge
+- Bot: project manager, business analyst, market research, ask from w
+

@@ -94,3 +94,68 @@ Project knowledge paths must be rooted at:
 - Keep Obsidian updates consistent with project knowledge items and decision records.
 - Store knowledge in Obsidian alongside memory context.
 - Use Obsidian to retrieve related information alongside memory lookups.
+
+## Appended Bonfire Page Knowledge Sections (2026-09-16)
+
+This block is derived from W-ai/hermes/shared/profile-knowledge-sections.md and scoped for this profile.
+
+### SECTION-CH-01: Company Home Attention Triage
+
+#### Intent
+Keep user attention queues actionable and prioritized.
+
+#### Trigger
+Use when a task asks what needs attention, approval, or immediate follow-up at company level.
+
+#### Expected Behavior
+1. Review open attention items grouped by canonical category.
+2. Prioritize blockers, overdue items, and decision-waiting items.
+3. Route each item to the most relevant project, status, knowledge, or room context.
+4. Resolve or dismiss items only with clear rationale.
+
+#### Key Entities
+- AttentionItem
+- User
+- Project
+- Room
+
+#### Boundaries
+- Do not treat this as a company archival dashboard.
+- Do not replace period status reporting with attention triage.
+
+#### Example Task Framing
+"Review Company Home attention items, prioritize blockers and approvals, and produce an action queue for today."
+
+#### Related Profiles
+- Main: delegator, company, not_known_task
+- Bot: project manager, business analyst, ask from w
+
+### SECTION-CS-01: Company Status Period Review
+
+#### Intent
+Maintain a period-based company narrative for priorities, risk, dependencies, and decisions.
+
+#### Trigger
+Use when users request monthly/periodic company health, executive summary, or cross-project alignment.
+
+#### Expected Behavior
+1. Select the correct status period before analysis.
+2. Summarize priorities, progress, risks, dependencies, changes, decisions, and learnings.
+3. Highlight impact and ownership for each major status signal.
+4. Route execution follow-ups to project-level owners and trackers.
+
+#### Key Entities
+- CompanyStatusPeriod
+- CompanyStatusItem
+
+#### Boundaries
+- Do not collapse detailed execution tracking into this page.
+- Do not publish status without period context.
+
+#### Example Task Framing
+"Prepare a company status summary for the current period with top risks, decisions, and dependency actions."
+
+#### Related Profiles
+- Main: company, company_project, cron_profile, knowledge
+- Bot: project manager, business analyst, market research, ask from w
+

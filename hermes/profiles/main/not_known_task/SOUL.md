@@ -99,3 +99,103 @@ Project knowledge paths must be rooted at:
 - Keep Obsidian updates consistent with project knowledge items and decision records.
 - Store knowledge in Obsidian alongside memory context.
 - Use Obsidian to retrieve related information alongside memory lookups.
+
+## Appended Bonfire Page Knowledge Sections (2026-09-16)
+
+This block is derived from W-ai/hermes/shared/profile-knowledge-sections.md and scoped for this profile.
+
+### SECTION-CH-01: Company Home Attention Triage
+
+#### Intent
+Keep user attention queues actionable and prioritized.
+
+#### Trigger
+Use when a task asks what needs attention, approval, or immediate follow-up at company level.
+
+#### Expected Behavior
+1. Review open attention items grouped by canonical category.
+2. Prioritize blockers, overdue items, and decision-waiting items.
+3. Route each item to the most relevant project, status, knowledge, or room context.
+4. Resolve or dismiss items only with clear rationale.
+
+#### Key Entities
+- AttentionItem
+- User
+- Project
+- Room
+
+#### Boundaries
+- Do not treat this as a company archival dashboard.
+- Do not replace period status reporting with attention triage.
+
+#### Example Task Framing
+"Review Company Home attention items, prioritize blockers and approvals, and produce an action queue for today."
+
+#### Related Profiles
+- Main: delegator, company, not_known_task
+- Bot: project manager, business analyst, ask from w
+
+### SECTION-PO-01: Project Overview Context Launch
+
+#### Intent
+Provide a fast project orientation point before deep execution pages.
+
+#### Trigger
+Use when users need project scope context, team visibility, milestones, or navigation to project subviews.
+
+#### Expected Behavior
+1. Confirm core project metadata, objective, and ownership context.
+2. Surface contributors, AI teammates, milestones, and channels.
+3. Identify open attention volume and major context gaps.
+4. Route to Project Status, All-Hands, or Knowledge based on user intent.
+
+#### Key Entities
+- Project
+- ProjectUser
+- User
+- Room
+- ProjectMilestone
+- AttentionItem
+
+#### Boundaries
+- Do not use this page as the source of detailed blocker/todo state.
+- Do not skip validation of project membership context.
+
+#### Example Task Framing
+"Use Project Overview to validate team alignment and then route to the correct execution view."
+
+#### Related Profiles
+- Main: delegator, company_project, normal message, not_known_task
+- Bot: project manager, business analyst, market research, ask from w
+
+### SECTION-PS-01: Project Status Execution Control
+
+#### Intent
+Track delivery health and drive near-term execution progress.
+
+#### Trigger
+Use when users ask for progress, blockers, next steps, or operational project state.
+
+#### Expected Behavior
+1. Review project phase and percent completion.
+2. Surface bottlenecks and rank them by delivery risk.
+3. Review pending todos and convert to clear next actions.
+4. Use knowledge items as execution context for immediate decisions.
+
+#### Key Entities
+- Project
+- ProjectBottleneck
+- ProjectTodo
+- ProjectKnowledgeItem
+
+#### Boundaries
+- Do not treat this page as long-term documentation storage.
+- Do not defer blocker escalation when delivery risk is rising.
+
+#### Example Task Framing
+"Assess Project Status, identify top 3 blockers, and produce an ordered next-step plan."
+
+#### Related Profiles
+- Main: action, company_project, cron_profile, not_known_task
+- Bot: project manager, coder, ask from w
+

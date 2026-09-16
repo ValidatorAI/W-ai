@@ -128,3 +128,132 @@ Project knowledge paths must be rooted at:
 - Keep Obsidian updates consistent with project knowledge items and decision records.
 - Store knowledge in Obsidian alongside memory context.
 - Use Obsidian to retrieve related information alongside memory lookups.
+
+## Appended Bonfire Page Knowledge Sections (2026-09-16)
+
+This block is derived from W-ai/hermes/shared/profile-knowledge-sections.md and scoped for this profile.
+
+### SECTION-PO-01: Project Overview Context Launch
+
+#### Intent
+Provide a fast project orientation point before deep execution pages.
+
+#### Trigger
+Use when users need project scope context, team visibility, milestones, or navigation to project subviews.
+
+#### Expected Behavior
+1. Confirm core project metadata, objective, and ownership context.
+2. Surface contributors, AI teammates, milestones, and channels.
+3. Identify open attention volume and major context gaps.
+4. Route to Project Status, All-Hands, or Knowledge based on user intent.
+
+#### Key Entities
+- Project
+- ProjectUser
+- User
+- Room
+- ProjectMilestone
+- AttentionItem
+
+#### Boundaries
+- Do not use this page as the source of detailed blocker/todo state.
+- Do not skip validation of project membership context.
+
+#### Example Task Framing
+"Use Project Overview to validate team alignment and then route to the correct execution view."
+
+#### Related Profiles
+- Main: delegator, company_project, normal message, not_known_task
+- Bot: project manager, business analyst, market research, ask from w
+
+### SECTION-PS-01: Project Status Execution Control
+
+#### Intent
+Track delivery health and drive near-term execution progress.
+
+#### Trigger
+Use when users ask for progress, blockers, next steps, or operational project state.
+
+#### Expected Behavior
+1. Review project phase and percent completion.
+2. Surface bottlenecks and rank them by delivery risk.
+3. Review pending todos and convert to clear next actions.
+4. Use knowledge items as execution context for immediate decisions.
+
+#### Key Entities
+- Project
+- ProjectBottleneck
+- ProjectTodo
+- ProjectKnowledgeItem
+
+#### Boundaries
+- Do not treat this page as long-term documentation storage.
+- Do not defer blocker escalation when delivery risk is rising.
+
+#### Example Task Framing
+"Assess Project Status, identify top 3 blockers, and produce an ordered next-step plan."
+
+#### Related Profiles
+- Main: action, company_project, cron_profile, not_known_task
+- Bot: project manager, coder, ask from w
+
+### SECTION-PA-01: Project All-Hands Decision and Action Ledger
+
+#### Intent
+Capture team sync outcomes as accountable actions and decisions.
+
+#### Trigger
+Use when users request meeting recap, action item follow-up, or decision rationale review.
+
+#### Expected Behavior
+1. Read active summary and key takeaways.
+2. Review pending action items and ownership.
+3. Validate recorded decisions with rationale and impact.
+4. Update completion state and route unresolved items to execution owners.
+
+#### Key Entities
+- ProjectAllHandsTakeaway
+- ProjectAllHandsActionItem
+- ProjectAllHandsDecision
+- Project
+
+#### Boundaries
+- Do not let action items remain ownerless.
+- Do not store long-form knowledge here when it belongs in Project Knowledge.
+
+#### Example Task Framing
+"Review All-Hands outputs, close completed items, and assign unresolved decisions to owners."
+
+#### Related Profiles
+- Main: action, company_project, cron_profile, knowledge
+- Bot: project manager, business analyst, coder
+
+### SECTION-CS-01: Company Status Period Review
+
+#### Intent
+Maintain a period-based company narrative for priorities, risk, dependencies, and decisions.
+
+#### Trigger
+Use when users request monthly/periodic company health, executive summary, or cross-project alignment.
+
+#### Expected Behavior
+1. Select the correct status period before analysis.
+2. Summarize priorities, progress, risks, dependencies, changes, decisions, and learnings.
+3. Highlight impact and ownership for each major status signal.
+4. Route execution follow-ups to project-level owners and trackers.
+
+#### Key Entities
+- CompanyStatusPeriod
+- CompanyStatusItem
+
+#### Boundaries
+- Do not collapse detailed execution tracking into this page.
+- Do not publish status without period context.
+
+#### Example Task Framing
+"Prepare a company status summary for the current period with top risks, decisions, and dependency actions."
+
+#### Related Profiles
+- Main: company, company_project, cron_profile, knowledge
+- Bot: project manager, business analyst, market research, ask from w
+

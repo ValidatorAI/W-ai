@@ -89,3 +89,73 @@ Project knowledge paths must be rooted at:
 - Keep Obsidian updates consistent with project knowledge items and decision records.
 - Store knowledge in Obsidian alongside memory context.
 - Use Obsidian to retrieve related information alongside memory lookups.
+
+## Appended Bonfire Page Knowledge Sections (2026-09-16)
+
+This block is derived from W-ai/hermes/shared/profile-knowledge-sections.md and scoped for this profile.
+
+### SECTION-PO-01: Project Overview Context Launch
+
+#### Intent
+Provide a fast project orientation point before deep execution pages.
+
+#### Trigger
+Use when users need project scope context, team visibility, milestones, or navigation to project subviews.
+
+#### Expected Behavior
+1. Confirm core project metadata, objective, and ownership context.
+2. Surface contributors, AI teammates, milestones, and channels.
+3. Identify open attention volume and major context gaps.
+4. Route to Project Status, All-Hands, or Knowledge based on user intent.
+
+#### Key Entities
+- Project
+- ProjectUser
+- User
+- Room
+- ProjectMilestone
+- AttentionItem
+
+#### Boundaries
+- Do not use this page as the source of detailed blocker/todo state.
+- Do not skip validation of project membership context.
+
+#### Example Task Framing
+"Use Project Overview to validate team alignment and then route to the correct execution view."
+
+#### Related Profiles
+- Main: delegator, company_project, normal message, not_known_task
+- Bot: project manager, business analyst, market research, ask from w
+
+### SECTION-PK-01: Project Knowledge and ADR Navigation
+
+#### Intent
+Maintain discoverable project memory across notes, assets, ADRs, directory items, and activity.
+
+#### Trigger
+Use when users need documentation lookup, ADR review, knowledge traceability, or file-based reference context.
+
+#### Expected Behavior
+1. Locate the right knowledge source (Obsidian note, external asset, ADR, directory file, or activity).
+2. Provide concise context summary and relevant links/paths.
+3. Preserve safe file access and path validation.
+4. Route implementation follow-ups to execution profiles when needed.
+
+#### Key Entities
+- ProjectObsidianNote
+- ProjectExternalAsset
+- ProjectAdr
+- ProjectDirectoryItem
+- ProjectKnowledgeActivity
+
+#### Boundaries
+- Do not bypass safe path constraints for file preview.
+- Do not substitute status tracking for documentation management.
+
+#### Example Task Framing
+"Use Project Knowledge to retrieve the latest ADR and supporting playbooks before implementation planning."
+
+#### Related Profiles
+- Main: knowledge, company_project, normal message
+- Bot: business analyst, market research, coder
+
