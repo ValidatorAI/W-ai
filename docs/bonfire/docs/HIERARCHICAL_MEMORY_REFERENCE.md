@@ -1,4 +1,4 @@
-# Bonfire Hierarchical Memory Reference
+#  Hierarchical Memory Reference
 
 A company-rooted memory path map for Bonfire entities and relationships.
 
