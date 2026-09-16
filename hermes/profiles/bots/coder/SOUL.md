@@ -158,9 +158,6 @@ Use when users ask for progress, blockers, next steps, or operational project st
 #### Example Task Framing
 "Assess Project Status, identify top 3 blockers, and produce an ordered next-step plan."
 
-#### Related Profiles
-- Main: action, company_project, cron_profile, not_known_task
-- Bot: project manager, coder, ask from w
 
 ### SECTION-PK-01: Project Knowledge and ADR Navigation
 
@@ -190,9 +187,6 @@ Use when users need documentation lookup, ADR review, knowledge traceability, or
 #### Example Task Framing
 "Use Project Knowledge to retrieve the latest ADR and supporting playbooks before implementation planning."
 
-#### Related Profiles
-- Main: knowledge, company_project, normal message
-- Bot: business analyst, market research, coder
 
 ### SECTION-PA-01: Project All-Hands Decision and Action Ledger
 
@@ -221,7 +215,4 @@ Use when users request meeting recap, action item follow-up, or decision rationa
 #### Example Task Framing
 "Review All-Hands outputs, close completed items, and assign unresolved decisions to owners."
 
-#### Related Profiles
-- Main: action, company_project, cron_profile, knowledge
-- Bot: project manager, business analyst, coder
 

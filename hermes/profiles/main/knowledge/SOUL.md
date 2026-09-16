@@ -119,9 +119,6 @@ Use when users need documentation lookup, ADR review, knowledge traceability, or
 #### Example Task Framing
 "Use Project Knowledge to retrieve the latest ADR and supporting playbooks before implementation planning."
 
-#### Related Profiles
-- Main: knowledge, company_project, normal message
-- Bot: business analyst, market research, coder
 
 ### SECTION-PA-01: Project All-Hands Decision and Action Ledger
 
@@ -150,9 +147,6 @@ Use when users request meeting recap, action item follow-up, or decision rationa
 #### Example Task Framing
 "Review All-Hands outputs, close completed items, and assign unresolved decisions to owners."
 
-#### Related Profiles
-- Main: action, company_project, cron_profile, knowledge
-- Bot: project manager, business analyst, coder
 
 ### SECTION-CS-01: Company Status Period Review
 
@@ -179,7 +173,4 @@ Use when users request monthly/periodic company health, executive summary, or cr
 #### Example Task Framing
 "Prepare a company status summary for the current period with top risks, decisions, and dependency actions."
 
-#### Related Profiles
-- Main: company, company_project, cron_profile, knowledge
-- Bot: project manager, business analyst, market research, ask from w
 

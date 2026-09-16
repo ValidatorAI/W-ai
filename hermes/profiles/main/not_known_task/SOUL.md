@@ -131,9 +131,6 @@ Use when a task asks what needs attention, approval, or immediate follow-up at c
 #### Example Task Framing
 "Review Company Home attention items, prioritize blockers and approvals, and produce an action queue for today."
 
-#### Related Profiles
-- Main: delegator, company, not_known_task
-- Bot: project manager, business analyst, ask from w
 
 ### SECTION-PO-01: Project Overview Context Launch
 
@@ -164,9 +161,6 @@ Use when users need project scope context, team visibility, milestones, or navig
 #### Example Task Framing
 "Use Project Overview to validate team alignment and then route to the correct execution view."
 
-#### Related Profiles
-- Main: delegator, company_project, normal message, not_known_task
-- Bot: project manager, business analyst, market research, ask from w
 
 ### SECTION-PS-01: Project Status Execution Control
 
@@ -195,7 +189,4 @@ Use when users ask for progress, blockers, next steps, or operational project st
 #### Example Task Framing
 "Assess Project Status, identify top 3 blockers, and produce an ordered next-step plan."
 
-#### Related Profiles
-- Main: action, company_project, cron_profile, not_known_task
-- Bot: project manager, coder, ask from w
 

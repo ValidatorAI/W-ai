@@ -127,9 +127,6 @@ Use when users request monthly/periodic company health, executive summary, or cr
 #### Example Task Framing
 "Prepare a company status summary for the current period with top risks, decisions, and dependency actions."
 
-#### Related Profiles
-- Main: company, company_project, cron_profile, knowledge
-- Bot: project manager, business analyst, market research, ask from w
 
 ### SECTION-PS-01: Project Status Execution Control
 
@@ -158,9 +155,6 @@ Use when users ask for progress, blockers, next steps, or operational project st
 #### Example Task Framing
 "Assess Project Status, identify top 3 blockers, and produce an ordered next-step plan."
 
-#### Related Profiles
-- Main: action, company_project, cron_profile, not_known_task
-- Bot: project manager, coder, ask from w
 
 ### SECTION-PA-01: Project All-Hands Decision and Action Ledger
 
@@ -189,7 +183,4 @@ Use when users request meeting recap, action item follow-up, or decision rationa
 #### Example Task Framing
 "Review All-Hands outputs, close completed items, and assign unresolved decisions to owners."
 
-#### Related Profiles
-- Main: action, company_project, cron_profile, knowledge
-- Bot: project manager, business analyst, coder
 

@@ -155,9 +155,6 @@ Use when users request monthly/periodic company health, executive summary, or cr
 #### Example Task Framing
 "Prepare a company status summary for the current period with top risks, decisions, and dependency actions."
 
-#### Related Profiles
-- Main: company, company_project, cron_profile, knowledge
-- Bot: project manager, business analyst, market research, ask from w
 
 ### SECTION-PK-01: Project Knowledge and ADR Navigation
 
@@ -187,9 +184,6 @@ Use when users need documentation lookup, ADR review, knowledge traceability, or
 #### Example Task Framing
 "Use Project Knowledge to retrieve the latest ADR and supporting playbooks before implementation planning."
 
-#### Related Profiles
-- Main: knowledge, company_project, normal message
-- Bot: business analyst, market research, coder
 
 ### SECTION-PO-01: Project Overview Context Launch
 
@@ -220,7 +214,4 @@ Use when users need project scope context, team visibility, milestones, or navig
 #### Example Task Framing
 "Use Project Overview to validate team alignment and then route to the correct execution view."
 
-#### Related Profiles
-- Main: delegator, company_project, normal message, not_known_task
-- Bot: project manager, business analyst, market research, ask from w
 

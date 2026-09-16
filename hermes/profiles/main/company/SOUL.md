@@ -126,9 +126,6 @@ Use when a task asks what needs attention, approval, or immediate follow-up at c
 #### Example Task Framing
 "Review Company Home attention items, prioritize blockers and approvals, and produce an action queue for today."
 
-#### Related Profiles
-- Main: delegator, company, not_known_task
-- Bot: project manager, business analyst, ask from w
 
 ### SECTION-CS-01: Company Status Period Review
 
@@ -155,7 +152,4 @@ Use when users request monthly/periodic company health, executive summary, or cr
 #### Example Task Framing
 "Prepare a company status summary for the current period with top risks, decisions, and dependency actions."
 
-#### Related Profiles
-- Main: company, company_project, cron_profile, knowledge
-- Bot: project manager, business analyst, market research, ask from w
 
