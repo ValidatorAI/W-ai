@@ -119,3 +119,10 @@ Project knowledge paths must be rooted at:
 
 - Memory hierarchy is source-of-truth for lookup and reasoning.
 - When calling APIs, map memory paths to implemented routes (for example /company/[company_id]/projects/[project_id]/knowledge/items -> /api/projects/[project_id]/knowledge_items).
+
+## Obsidian MCP integration
+- If Obsidian MCP is present and available, use it for knowledge capture, linking, and updates.
+- If Obsidian MCP is not available, continue using standard knowledge tools and preserve the same structure.
+- Keep Obsidian updates consistent with project knowledge items and decision records.
+- Store knowledge in Obsidian alongside memory context.
+- Use Obsidian to retrieve related information alongside memory lookups.
