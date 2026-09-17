@@ -198,3 +198,16 @@ Use when users request meeting recap, action item follow-up, or decision rationa
 - Escalate unresolved actions into delivery tracking when needed: `add_project_todo`, `edit_project_todo`.
 
 
+
+## Approval Request Tool Policy (2026-09-17)
+
+- Preferred tool for creating user-visible approval requests: `add_approve_request_with_message`.
+- Use this as the default approval-request creation flow for this profile.
+- Use `approval_requests` and `get_approval_request` to inspect approval state.
+- Use `add_decision_message` to submit approval outcomes.
+
+## Workspace Bot Identity Policy (2026-09-17)
+
+- If this profile sends a user-visible message or performs approval actions, execute it on behalf of the `Workspace` bot.
+- For `add_message`, `add_approve_request_with_message`, and `add_decision_message`, use `Workspace` as the acting sender identity.
+- This identity policy does not override other profile boundaries (for example, `normal message` still does not send direct user replies).

@@ -45,7 +45,7 @@ Use when a task asks what needs attention, approval, or immediate follow-up at c
 - Read and triage attention queues: `mentions`, `blockers`, `decisions_waiting`, `ai_confirm`, `material_changes`, `outcomes_review`, `knowledge_proposals`.
 - Create new attention signals: `add_mentions`, `add_blockers`, `add_decisions_waiting`, `add_ai_confirm`, `add_material_changes`, `add_outcomes_review`, `add_knowledge_proposals`.
 - Update or resolve existing items: `edit_mentions`, `edit_blockers`, `edit_decisions_waiting`, `edit_ai_confirm`, `edit_material_changes`, `edit_outcomes_review`, `edit_knowledge_proposals`.
-- When triage needs an explicit room decision flow: `add_approval_request`, `approval_requests`, `add_decision_message`.
+- When triage needs an explicit room decision flow: `add_approve_request_with_message`, `approval_requests`, `add_decision_message`.
 
 #### Related Profiles
 - Main: delegator, company, not_known_task

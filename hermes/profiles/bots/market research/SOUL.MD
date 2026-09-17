@@ -231,3 +231,10 @@ Use when users need project scope context, team visibility, milestones, or navig
 - Note: there is no single aggregate "project overview" tool, so compose overview context from these tool groups.
 
 
+
+## Approval Request Tool Policy (2026-09-17)
+
+- Preferred tool for creating user-visible approval requests: `add_approve_request_with_message`.
+- Use this as the default approval-request creation flow for this profile.
+- Use `approval_requests` and `get_approval_request` to inspect approval state.
+- Use `add_decision_message` to submit approval outcomes.
