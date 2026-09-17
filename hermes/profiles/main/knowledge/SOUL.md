@@ -118,6 +118,12 @@ Use when users need documentation lookup, ADR review, knowledge traceability, or
 
 #### Example Task Framing
 "Use Project Knowledge to retrieve the latest ADR and supporting playbooks before implementation planning."
+#### W-bridge MCP Tools to Use
+- Primary knowledge records: `project_knowledge_items`, `add_project_knowledge_item`, `edit_project_knowledge_item`, `delete_project_knowledge_item`.
+- ADR lifecycle: `project_decision_records`, `add_project_decision_record`, `edit_project_decision_record`, `delete_project_decision_record`.
+- External references and sources: `external_knowledge_assets`, `add_external_knowledge_asset`, `edit_external_knowledge_asset`, `delete_external_knowledge_asset`.
+- Knowledge traceability and summaries: `knowledge_activity_log`, `add_knowledge_activity_log`, `edit_knowledge_activity_log`, `delete_knowledge_activity_log`, `knowledge_summary_items`, `add_knowledge_summary_item`, `edit_knowledge_summary_item`, `delete_knowledge_summary_item`.
+- Obsidian and directory context: `project_obsidian_note`, `add_project_obsidian_note`, `edit_project_obsidian_note`, `delete_project_obsidian_note`, `tree_based_project_directory_data`, `add_tree_based_project_directory_item`, `edit_tree_based_project_directory_item`, `delete_tree_based_project_directory_item`.
 
 
 ### SECTION-PA-01: Project All-Hands Decision and Action Ledger
@@ -146,6 +152,11 @@ Use when users request meeting recap, action item follow-up, or decision rationa
 
 #### Example Task Framing
 "Review All-Hands outputs, close completed items, and assign unresolved decisions to owners."
+#### W-bridge MCP Tools to Use
+- Manage meeting takeaways: `project_all_hands_takeaway`, `add_project_all_hands_takeaway`, `edit_project_all_hands_takeaway`, `delete_project_all_hands_takeaway`.
+- Manage decision records from all-hands: `project_all_hands_decision`, `add_project_all_hands_decision`, `edit_project_all_hands_decision`, `delete_project_all_hands_decision`.
+- Manage follow-up actions: `project_all_hands_action_item`, `add_project_all_hands_action_item`, `edit_project_all_hands_action_item`, `delete_project_all_hands_action_item`.
+- Escalate unresolved actions into delivery tracking when needed: `add_project_todo`, `edit_project_todo`.
 
 
 ### SECTION-CS-01: Company Status Period Review
@@ -172,5 +183,9 @@ Use when users request monthly/periodic company health, executive summary, or cr
 
 #### Example Task Framing
 "Prepare a company status summary for the current period with top risks, decisions, and dependency actions."
+#### W-bridge MCP Tools to Use
+- Select and manage the status period envelope: `company_status_period`, `add_company_status_period`, `edit_company_status_period`.
+- Work category streams inside the chosen period: `priorities`, `progress`, `risks`, `dependencies`, `changes`, `decisions`, `learnings`.
+- Use the category tools in this order for predictable reporting: list current state, add missing items, then edit status, health, and ownership details.
 
 

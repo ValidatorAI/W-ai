@@ -41,6 +41,11 @@ Use when a task asks what needs attention, approval, or immediate follow-up at c
 
 #### Example Task Framing
 "Review Company Home attention items, prioritize blockers and approvals, and produce an action queue for today."
+#### W-bridge MCP Tools to Use
+- Read and triage attention queues: `mentions`, `blockers`, `decisions_waiting`, `ai_confirm`, `material_changes`, `outcomes_review`, `knowledge_proposals`.
+- Create new attention signals: `add_mentions`, `add_blockers`, `add_decisions_waiting`, `add_ai_confirm`, `add_material_changes`, `add_outcomes_review`, `add_knowledge_proposals`.
+- Update or resolve existing items: `edit_mentions`, `edit_blockers`, `edit_decisions_waiting`, `edit_ai_confirm`, `edit_material_changes`, `edit_outcomes_review`, `edit_knowledge_proposals`.
+- When triage needs an explicit room decision flow: `add_approval_request`, `approval_requests`, `add_decision_message`.
 
 #### Related Profiles
 - Main: delegator, company, not_known_task
@@ -70,6 +75,10 @@ Use when users request monthly/periodic company health, executive summary, or cr
 
 #### Example Task Framing
 "Prepare a company status summary for the current period with top risks, decisions, and dependency actions."
+#### W-bridge MCP Tools to Use
+- Select and manage the status period envelope: `company_status_period`, `add_company_status_period`, `edit_company_status_period`.
+- Work category streams inside the chosen period: `priorities`, `progress`, `risks`, `dependencies`, `changes`, `decisions`, `learnings`.
+- Use the category tools in this order for predictable reporting: list current state, add missing items, then edit status, health, and ownership details.
 
 #### Related Profiles
 - Main: company, company_project, cron_profile, knowledge
@@ -103,6 +112,12 @@ Use when users need project scope context, team visibility, milestones, or navig
 
 #### Example Task Framing
 "Use Project Overview to validate team alignment and then route to the correct execution view."
+#### W-bridge MCP Tools to Use
+- Build the execution-side project snapshot: `project_milestones`, `project_todos`, `project_bottlenecks`.
+- Pull collaboration and decision context: `project_all_hands_takeaway`, `project_all_hands_action_item`, `project_all_hands_decision`.
+- Pull knowledge context before routing: `project_knowledge_items`, `project_decision_records`.
+- Use company-home signals to detect cross-cutting urgency: `mentions`, `blockers`, `decisions_waiting`.
+- Note: there is no single aggregate "project overview" tool, so compose overview context from these tool groups.
 
 #### Related Profiles
 - Main: delegator, company_project, normal message, not_known_task
@@ -134,6 +149,11 @@ Use when users ask for progress, blockers, next steps, or operational project st
 
 #### Example Task Framing
 "Assess Project Status, identify top 3 blockers, and produce an ordered next-step plan."
+#### W-bridge MCP Tools to Use
+- Core project status reads and writes: `project_bottlenecks`, `add_project_bottleneck`, `edit_project_bottleneck`, `delete_project_bottleneck`.
+- Todo pipeline control: `project_todos`, `add_project_todo`, `edit_project_todo`, `delete_project_todo`.
+- Milestone alignment for timeline health: `project_milestones`, `add_project_milestone`, `edit_project_milestone`, `delete_project_milestone`.
+- Context support for status decisions: `project_knowledge_items`, `project_decision_records`.
 
 #### Related Profiles
 - Main: action, company_project, cron_profile, not_known_task
@@ -165,6 +185,11 @@ Use when users request meeting recap, action item follow-up, or decision rationa
 
 #### Example Task Framing
 "Review All-Hands outputs, close completed items, and assign unresolved decisions to owners."
+#### W-bridge MCP Tools to Use
+- Manage meeting takeaways: `project_all_hands_takeaway`, `add_project_all_hands_takeaway`, `edit_project_all_hands_takeaway`, `delete_project_all_hands_takeaway`.
+- Manage decision records from all-hands: `project_all_hands_decision`, `add_project_all_hands_decision`, `edit_project_all_hands_decision`, `delete_project_all_hands_decision`.
+- Manage follow-up actions: `project_all_hands_action_item`, `add_project_all_hands_action_item`, `edit_project_all_hands_action_item`, `delete_project_all_hands_action_item`.
+- Escalate unresolved actions into delivery tracking when needed: `add_project_todo`, `edit_project_todo`.
 
 #### Related Profiles
 - Main: action, company_project, cron_profile, knowledge
@@ -197,6 +222,12 @@ Use when users need documentation lookup, ADR review, knowledge traceability, or
 
 #### Example Task Framing
 "Use Project Knowledge to retrieve the latest ADR and supporting playbooks before implementation planning."
+#### W-bridge MCP Tools to Use
+- Primary knowledge records: `project_knowledge_items`, `add_project_knowledge_item`, `edit_project_knowledge_item`, `delete_project_knowledge_item`.
+- ADR lifecycle: `project_decision_records`, `add_project_decision_record`, `edit_project_decision_record`, `delete_project_decision_record`.
+- External references and sources: `external_knowledge_assets`, `add_external_knowledge_asset`, `edit_external_knowledge_asset`, `delete_external_knowledge_asset`.
+- Knowledge traceability and summaries: `knowledge_activity_log`, `add_knowledge_activity_log`, `edit_knowledge_activity_log`, `delete_knowledge_activity_log`, `knowledge_summary_items`, `add_knowledge_summary_item`, `edit_knowledge_summary_item`, `delete_knowledge_summary_item`.
+- Obsidian and directory context: `project_obsidian_note`, `add_project_obsidian_note`, `edit_project_obsidian_note`, `delete_project_obsidian_note`, `tree_based_project_directory_data`, `add_tree_based_project_directory_item`, `edit_tree_based_project_directory_item`, `delete_tree_based_project_directory_item`.
 
 #### Related Profiles
 - Main: knowledge, company_project, normal message

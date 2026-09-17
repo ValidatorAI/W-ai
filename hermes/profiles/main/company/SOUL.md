@@ -125,6 +125,11 @@ Use when a task asks what needs attention, approval, or immediate follow-up at c
 
 #### Example Task Framing
 "Review Company Home attention items, prioritize blockers and approvals, and produce an action queue for today."
+#### W-bridge MCP Tools to Use
+- Read and triage attention queues: `mentions`, `blockers`, `decisions_waiting`, `ai_confirm`, `material_changes`, `outcomes_review`, `knowledge_proposals`.
+- Create new attention signals: `add_mentions`, `add_blockers`, `add_decisions_waiting`, `add_ai_confirm`, `add_material_changes`, `add_outcomes_review`, `add_knowledge_proposals`.
+- Update or resolve existing items: `edit_mentions`, `edit_blockers`, `edit_decisions_waiting`, `edit_ai_confirm`, `edit_material_changes`, `edit_outcomes_review`, `edit_knowledge_proposals`.
+- When triage needs an explicit room decision flow: `add_approval_request`, `approval_requests`, `add_decision_message`.
 
 
 ### SECTION-CS-01: Company Status Period Review
@@ -151,5 +156,9 @@ Use when users request monthly/periodic company health, executive summary, or cr
 
 #### Example Task Framing
 "Prepare a company status summary for the current period with top risks, decisions, and dependency actions."
+#### W-bridge MCP Tools to Use
+- Select and manage the status period envelope: `company_status_period`, `add_company_status_period`, `edit_company_status_period`.
+- Work category streams inside the chosen period: `priorities`, `progress`, `risks`, `dependencies`, `changes`, `decisions`, `learnings`.
+- Use the category tools in this order for predictable reporting: list current state, add missing items, then edit status, health, and ownership details.
 
 

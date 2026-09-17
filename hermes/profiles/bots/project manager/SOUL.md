@@ -161,6 +161,12 @@ Use when users need project scope context, team visibility, milestones, or navig
 
 #### Example Task Framing
 "Use Project Overview to validate team alignment and then route to the correct execution view."
+#### W-bridge MCP Tools to Use
+- Build the execution-side project snapshot: `project_milestones`, `project_todos`, `project_bottlenecks`.
+- Pull collaboration and decision context: `project_all_hands_takeaway`, `project_all_hands_action_item`, `project_all_hands_decision`.
+- Pull knowledge context before routing: `project_knowledge_items`, `project_decision_records`.
+- Use company-home signals to detect cross-cutting urgency: `mentions`, `blockers`, `decisions_waiting`.
+- Note: there is no single aggregate "project overview" tool, so compose overview context from these tool groups.
 
 
 ### SECTION-PS-01: Project Status Execution Control
@@ -189,6 +195,11 @@ Use when users ask for progress, blockers, next steps, or operational project st
 
 #### Example Task Framing
 "Assess Project Status, identify top 3 blockers, and produce an ordered next-step plan."
+#### W-bridge MCP Tools to Use
+- Core project status reads and writes: `project_bottlenecks`, `add_project_bottleneck`, `edit_project_bottleneck`, `delete_project_bottleneck`.
+- Todo pipeline control: `project_todos`, `add_project_todo`, `edit_project_todo`, `delete_project_todo`.
+- Milestone alignment for timeline health: `project_milestones`, `add_project_milestone`, `edit_project_milestone`, `delete_project_milestone`.
+- Context support for status decisions: `project_knowledge_items`, `project_decision_records`.
 
 
 ### SECTION-PA-01: Project All-Hands Decision and Action Ledger
@@ -217,6 +228,11 @@ Use when users request meeting recap, action item follow-up, or decision rationa
 
 #### Example Task Framing
 "Review All-Hands outputs, close completed items, and assign unresolved decisions to owners."
+#### W-bridge MCP Tools to Use
+- Manage meeting takeaways: `project_all_hands_takeaway`, `add_project_all_hands_takeaway`, `edit_project_all_hands_takeaway`, `delete_project_all_hands_takeaway`.
+- Manage decision records from all-hands: `project_all_hands_decision`, `add_project_all_hands_decision`, `edit_project_all_hands_decision`, `delete_project_all_hands_decision`.
+- Manage follow-up actions: `project_all_hands_action_item`, `add_project_all_hands_action_item`, `edit_project_all_hands_action_item`, `delete_project_all_hands_action_item`.
+- Escalate unresolved actions into delivery tracking when needed: `add_project_todo`, `edit_project_todo`.
 
 
 ### SECTION-CS-01: Company Status Period Review
@@ -243,5 +259,9 @@ Use when users request monthly/periodic company health, executive summary, or cr
 
 #### Example Task Framing
 "Prepare a company status summary for the current period with top risks, decisions, and dependency actions."
+#### W-bridge MCP Tools to Use
+- Select and manage the status period envelope: `company_status_period`, `add_company_status_period`, `edit_company_status_period`.
+- Work category streams inside the chosen period: `priorities`, `progress`, `risks`, `dependencies`, `changes`, `decisions`, `learnings`.
+- Use the category tools in this order for predictable reporting: list current state, add missing items, then edit status, health, and ownership details.
 
 

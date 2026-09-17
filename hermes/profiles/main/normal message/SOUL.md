@@ -122,6 +122,12 @@ Use when users need project scope context, team visibility, milestones, or navig
 
 #### Example Task Framing
 "Use Project Overview to validate team alignment and then route to the correct execution view."
+#### W-bridge MCP Tools to Use
+- Build the execution-side project snapshot: `project_milestones`, `project_todos`, `project_bottlenecks`.
+- Pull collaboration and decision context: `project_all_hands_takeaway`, `project_all_hands_action_item`, `project_all_hands_decision`.
+- Pull knowledge context before routing: `project_knowledge_items`, `project_decision_records`.
+- Use company-home signals to detect cross-cutting urgency: `mentions`, `blockers`, `decisions_waiting`.
+- Note: there is no single aggregate "project overview" tool, so compose overview context from these tool groups.
 
 
 ### SECTION-PK-01: Project Knowledge and ADR Navigation
@@ -151,5 +157,11 @@ Use when users need documentation lookup, ADR review, knowledge traceability, or
 
 #### Example Task Framing
 "Use Project Knowledge to retrieve the latest ADR and supporting playbooks before implementation planning."
+#### W-bridge MCP Tools to Use
+- Primary knowledge records: `project_knowledge_items`, `add_project_knowledge_item`, `edit_project_knowledge_item`, `delete_project_knowledge_item`.
+- ADR lifecycle: `project_decision_records`, `add_project_decision_record`, `edit_project_decision_record`, `delete_project_decision_record`.
+- External references and sources: `external_knowledge_assets`, `add_external_knowledge_asset`, `edit_external_knowledge_asset`, `delete_external_knowledge_asset`.
+- Knowledge traceability and summaries: `knowledge_activity_log`, `add_knowledge_activity_log`, `edit_knowledge_activity_log`, `delete_knowledge_activity_log`, `knowledge_summary_items`, `add_knowledge_summary_item`, `edit_knowledge_summary_item`, `delete_knowledge_summary_item`.
+- Obsidian and directory context: `project_obsidian_note`, `add_project_obsidian_note`, `edit_project_obsidian_note`, `delete_project_obsidian_note`, `tree_based_project_directory_data`, `add_tree_based_project_directory_item`, `edit_tree_based_project_directory_item`, `delete_tree_based_project_directory_item`.
 
 
