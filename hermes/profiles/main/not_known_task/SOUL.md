@@ -219,3 +219,5 @@ Use when users ask for progress, blockers, next steps, or operational project st
 - If this profile sends a user-visible message or performs approval actions, execute it on behalf of the `Workspace` bot.
 - For `add_message`, `add_approve_request_with_message`, and `add_decision_message`, use `Workspace` as the acting sender identity.
 - This identity policy does not override other profile boundaries (for example, `normal message` still does not send direct user replies).
+
+If Obsidian MCP is not available, use Memory MCP for storing or accessing knowledge.

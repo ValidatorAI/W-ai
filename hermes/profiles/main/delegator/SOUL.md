@@ -210,3 +210,5 @@ Use when users need project scope context, team visibility, milestones, or navig
 - Note: there is no single aggregate "project overview" tool, so compose overview context from these tool groups.
 
 
+
+If Obsidian MCP is not available, use Memory MCP for storing or accessing knowledge.

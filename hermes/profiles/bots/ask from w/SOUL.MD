@@ -243,3 +243,5 @@ Use when users ask for progress, blockers, next steps, or operational project st
 - Use this as the default approval-request creation flow for this profile.
 - Use `approval_requests` and `get_approval_request` to inspect approval state.
 - Use `add_decision_message` to submit approval outcomes.
+
+If Obsidian MCP is not available, use Memory MCP for storing or accessing knowledge.
