@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mcp_servers profile="default" source="/home/siavash/.hermes/config.yaml" env_file="/home/siavash/.hermes/.env" count="3" generated="2026-09-21">
+  <mcp_server name="w-bridge" enabled="true">
+    <name>w-bridge</name>
+    <transport>http</transport>
+    <url>http://0.0.0.0:8031/mcp</url>
+    <authentication>none</authentication>
+    <auth_header></auth_header>
+    <bearer_token></bearer_token>
+    <tools_selection>all</tools_selection>
+    <status>enabled</status>
+  </mcp_server>
+  <mcp_server name="memory" enabled="true">
+    <name>memory</name>
+    <transport>http</transport>
+    <url>http://127.0.0.1:1933/mcp</url>
+    <authentication>none</authentication>
+    <auth_header></auth_header>
+    <bearer_token></bearer_token>
+    <tools_selection>all</tools_selection>
+    <status>enabled</status>
+  </mcp_server>
+  <mcp_server name="obisidian" enabled="true">
+    <name>obisidian</name>
+    <transport>http</transport>
+    <url>http://127.0.0.1:27123/mcp/</url>
+    <authentication>bearer</authentication>
+    <auth_header>Bearer ${MCP_OBISIDIAN_API_KEY}</auth_header>
+    <bearer_token_env>MCP_OBISIDIAN_API_KEY</bearer_token_env>
+    <bearer_token_env_file>/home/siavash/.hermes/.env</bearer_token_env_file>
+    <bearer_token>4db700f0e062d0cced0b9bb7c93e0b052cc978f0eaca04fb876f96dd09f695df</bearer_token>
+    <tools_selection>all</tools_selection>
+    <status>enabled</status>
+  </mcp_server>
+</mcp_servers>

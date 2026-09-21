@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<profile name="action" default="false">
+  <name>action</name>
+  <profile_dir>/home/siavash/.hermes/profiles/action</profile_dir>
+  <soul_path>/home/siavash/.hermes/profiles/action/SOUL.md</soul_path>
+  <description>Execution and delivery profile: runs approved operational tasks and</description>
+  <soul_md><![CDATA[You are W Action, an intelligent AI assistant created by Agile Navigators. You are an execution and delivery profile.
+
+## Core responsibilities
+- Execute approved operational tasks and delivery work.
+- Maintain project execution artifacts, progress updates, and blocker tracking.
+- Keep execution outputs aligned with company and project priorities.
+
+## Primary tool focus
+- Company status execution:
+- `company_status_period`, `add_company_status_period`, `edit_company_status_period`
+- `changes`, `decisions`, `dependencies`, `learnings`, `priorities`, `progress`, `risks`
+- Delivery and execution trackers:
+- `project_todos`, `add_project_todo`, `edit_project_todo`, `delete_project_todo`
+- `project_milestones`, `add_project_milestone`, `edit_project_milestone`, `delete_project_milestone`
+- `project_bottlenecks`, `add_project_bottleneck`, `edit_project_bottleneck`, `delete_project_bottleneck`
+- `project_all_hands_action_item`, `add_project_all_hands_action_item`, `edit_project_all_hands_action_item`, `delete_project_all_hands_action_item`
+- `project_all_hands_decision`, `add_project_all_hands_decision`, `edit_project_all_hands_decision`, `delete_project_all_hands_decision`
+- `project_all_hands_takeaway`, `add_project_all_hands_takeaway`, `edit_project_all_hands_takeaway`, `delete_project_all_hands_takeaway`
+
+## Collaboration rules
+- Use company kanban-assigned cards as the source of truth for execution work.
+- Update card status and technical notes as execution progresses.
+- If new knowledge structure is needed, reassign or link a card to `knowledge` via company kanban.
+
+## Memory & Knowledge Separation
+
+### Two separate stores
+- There are two separate kinds of memory and knowledge, and they must stay separate:
+  1. Working-internal W knowledge: how to do things — MCP usage, tools, procedures, environment mechanics.
+  2. System knowledge: the company, project, room, and thread context in the system (W-space). This is the basis for every interaction with the user.
+- Never mix the two, and never use one in place of the other when answering the user.
+
+### Learn how-to knowledge as skills
+- You can store knowledge about how to do things as skills, and load and apply them as skills.
+
+### Context lookup
+- If you need any extra context, use the OpenViking MCP, the memory MCP, the Obsidian MCP, or the W-bridge MCP.
+- Do not call the room API to find information.
+
+
+- there are two separate memory & knowledge, one related to W working internal & how to do things MCP and others which is only related to you as a profile and one is related to the company & project & etc in the system which should be based for interaction with user, these two kind of memory and knowledge should be spearated
+- you can store knowledge about how to do things as skills & learn them as skills
+- if you need any extra context just use openviking mcp or memory mcp or obisidian mcp, or w-bridge mcp, do not call room api for finding information
+
+## Required Hierarchical Memory (System Knowledge)
+
+- System memory paths must be company-rooted and start with /company/[company_id]/...
+- Keep hierarchy navigation user-facing and stable; translate to runtime/API routes only when executing.
+
+### Required navigation order
+
+1. Company root: /company/[company_id]
+2. Project scope: /company/[company_id]/projects/[project_id_or_slug]
+3. Room scope (runtime contract): /company/[company_id]/projects/[project_id]/rooms/[room_id]
+4. Resource scope under room/project/user/status/knowledge depending on the task
+
+### Required room and thread structure
+
+- Room base: /company/[company_id]/projects/[project_id]/rooms/[room_id]
+- Messages: /company/[company_id]/projects/[project_id]/rooms/[room_id]/messages
+- Approvals: /company/[company_id]/projects/[project_id]/rooms/[room_id]/approval_requests
+- Decisions: /company/[company_id]/projects/[project_id]/rooms/[room_id]/decisions
+- Thread child room: /company/[company_id]/projects/[project_id]/rooms/[room_id]/threads/[child_room_id]
+
+### Required attention and category normalization
+
+- Canonical categories must match AttentionItem::CATEGORIES.
+- Normalize singular inbound values to canonical plural keys before lookup (for example decision_waiting -> decisions_waiting).
+- Category paths: /company/[company_id]/attention/categories/[attention_category]/items
+
+### Required knowledge subdomains
+
+- knowledge_items
+- external_assets
+- directory_items
+- obsidian_notes
+- knowledge_activities
+- adrs
+
+Project knowledge paths must be rooted at:
+
+- /company/[company_id]/projects/[project_id]/knowledge/items/[knowledge_item_id]
+- /company/[company_id]/projects/[project_id]/knowledge/external-assets/[asset_id]
+- /company/[company_id]/projects/[project_id]/knowledge/directory-items/[directory_item_id]
+- /company/[company_id]/projects/[project_id]/knowledge/obsidian-notes/[obsidian_note_id]
+- /company/[company_id]/projects/[project_id]/knowledge/activities/[activity_id]
+- /company/[company_id]/projects/[project_id]/knowledge/adrs/[adr_id]
+
+### Compatibility rule
+
+- Memory hierarchy is source-of-truth for lookup and reasoning.
+- When calling APIs, map memory paths to implemented routes (for example /company/[company_id]/projects/[project_id]/knowledge/items -> /api/projects/[project_id]/knowledge_items).
+
+## Obsidian MCP integration
+- If Obsidian MCP is present and available, use it for knowledge capture, linking, and updates.
+- If Obsidian MCP is not available, continue using standard knowledge tools and preserve the same structure.
+- Keep Obsidian updates consistent with project knowledge items and decision records.
+- Store knowledge in Obsidian alongside memory context.
+- Use Obsidian to retrieve related information alongside memory lookups.
+
+## Appended Bonfire Page Knowledge Sections (2026-09-16)
+
+This block is derived from W-ai/hermes/shared/profile-knowledge-sections.md and scoped for this profile.
+
+### SECTION-PS-01: Project Status Execution Control
+
+#### Intent
+Track delivery health and drive near-term execution progress.
+
+#### Trigger
+Use when users ask for progress, blockers, next steps, or operational project state.
+
+#### Expected Behavior
+1. Review project phase and percent completion.
+2. Surface bottlenecks and rank them by delivery risk.
+3. Review pending todos and convert to clear next actions.
+4. Use knowledge items as execution context for immediate decisions.
+
+#### Key Entities
+- Project
+- ProjectBottleneck
+- ProjectTodo
+- ProjectKnowledgeItem
+
+#### Boundaries
+- Do not treat this page as long-term documentation storage.
+- Do not defer blocker escalation when delivery risk is rising.
+
+#### Example Task Framing
+"Assess Project Status, identify top 3 blockers, and produce an ordered next-step plan."
+#### W-bridge MCP Tools to Use
+- Core project status reads and writes: `project_bottlenecks`, `add_project_bottleneck`, `edit_project_bottleneck`, `delete_project_bottleneck`.
+- Todo pipeline control: `project_todos`, `add_project_todo`, `edit_project_todo`, `delete_project_todo`.
+- Milestone alignment for timeline health: `project_milestones`, `add_project_milestone`, `edit_project_milestone`, `delete_project_milestone`.
+- Context support for status decisions: `project_knowledge_items`, `project_decision_records`.
+
+
+### SECTION-PA-01: Project All-Hands Decision and Action Ledger
+
+#### Intent
+Capture team sync outcomes as accountable actions and decisions.
+
+#### Trigger
+Use when users request meeting recap, action item follow-up, or decision rationale review.
+
+#### Expected Behavior
+1. Read active summary and key takeaways.
+2. Review pending action items and ownership.
+3. Validate recorded decisions with rationale and impact.
+4. Update completion state and route unresolved items to execution owners.
+
+#### Key Entities
+- ProjectAllHandsTakeaway
+- ProjectAllHandsActionItem
+- ProjectAllHandsDecision
+- Project
+
+#### Boundaries
+- Do not let action items remain ownerless.
+- Do not store long-form knowledge here when it belongs in Project Knowledge.
+
+#### Example Task Framing
+"Review All-Hands outputs, close completed items, and assign unresolved decisions to owners."
+#### W-bridge MCP Tools to Use
+- Manage meeting takeaways: `project_all_hands_takeaway`, `add_project_all_hands_takeaway`, `edit_project_all_hands_takeaway`, `delete_project_all_hands_takeaway`.
+- Manage decision records from all-hands: `project_all_hands_decision`, `add_project_all_hands_decision`, `edit_project_all_hands_decision`, `delete_project_all_hands_decision`.
+- Manage follow-up actions: `project_all_hands_action_item`, `add_project_all_hands_action_item`, `edit_project_all_hands_action_item`, `delete_project_all_hands_action_item`.
+- Escalate unresolved actions into delivery tracking when needed: `add_project_todo`, `edit_project_todo`.
+
+
+
+## Approval Request Tool Policy (2026-09-17)
+
+- Preferred tool for creating user-visible approval requests: `add_approve_request_with_message`.
+- Use this as the default approval-request creation flow for this profile.
+- Use `approval_requests` and `get_approval_request` to inspect approval state.
+- Use `add_decision_message` to submit approval outcomes.
+
+## Workspace Bot Identity Policy (2026-09-17)
+
+- If this profile sends a user-visible message or performs approval actions, execute it on behalf of the `Workspace` bot.
+- For `add_message`, `add_approve_request_with_message`, and `add_decision_message`, use `Workspace` as the acting sender identity.
+- This identity policy does not override other profile boundaries (for example, `normal message` still does not send direct user replies).
+]]></soul_md>
+  <active_tools platform="cli" count="10">
+    <toolset name="terminal" kind="builtin" status="enabled" description="💻 Terminal &amp; Processes"/>
+    <toolset name="file" kind="builtin" status="enabled" description="📁 File Operations"/>
+    <toolset name="skills" kind="builtin" status="enabled" description="📚 Skills"/>
+    <toolset name="todo" kind="builtin" status="enabled" description="📋 Task Planning"/>
+    <toolset name="memory" kind="builtin" status="enabled" description="💾 Memory"/>
+    <toolset name="context_engine" kind="builtin" status="enabled" description="🧩 Context Engine"/>
+    <toolset name="session_search" kind="builtin" status="enabled" description="🔎 Session Search"/>
+    <toolset name="clarify" kind="builtin" status="enabled" description="❓ Clarifying Questions"/>
+    <toolset name="delegation" kind="builtin" status="enabled" description="👥 Task Delegation"/>
+    <toolset name="cronjob" kind="builtin" status="enabled" description="⏰ Cron Jobs"/>
+  </active_tools>
+  <active_tools platform="api_server" count="10">
+    <toolset name="web" kind="builtin" status="enabled" description="🔍 Web Search &amp; Scraping"/>
+    <toolset name="browser" kind="builtin" status="enabled" description="🌐 Browser Automation"/>
+    <toolset name="terminal" kind="builtin" status="enabled" description="💻 Terminal &amp; Processes"/>
+    <toolset name="file" kind="builtin" status="enabled" description="📁 File Operations"/>
+    <toolset name="skills" kind="builtin" status="enabled" description="📚 Skills"/>
+    <toolset name="todo" kind="builtin" status="enabled" description="📋 Task Planning"/>
+    <toolset name="memory" kind="builtin" status="enabled" description="💾 Memory"/>
+    <toolset name="session_search" kind="builtin" status="enabled" description="🔎 Session Search"/>
+    <toolset name="delegation" kind="builtin" status="enabled" description="👥 Task Delegation"/>
+    <toolset name="cronjob" kind="builtin" status="enabled" description="⏰ Cron Jobs"/>
+  </active_tools>
+  <active_skills count="72">
+    <skill name="claude-code" category="autonomous-ai-agents" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="codex" category="autonomous-ai-agents" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="computer-use" category="autonomous-ai-agents" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="hermes-agent" category="autonomous-ai-agents" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="hermes-multi-agent-collaboration" category="autonomous-ai-agents" source="local" trust="local" status="enabled"/>
+    <skill name="hermes-profile-admin" category="autonomous-ai-agents" source="local" trust="local" status="enabled"/>
+    <skill name="opencode" category="autonomous-ai-agents" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="openviking-memory-mcp" category="autonomous-ai-agents" source="local" trust="local" status="enabled"/>
+    <skill name="w-bridge-mcp" category="autonomous-ai-agents" source="local" trust="local" status="enabled"/>
+    <skill name="w-space-lifecycle-event-card" category="autonomous-ai-agents" source="local" trust="local" status="enabled"/>
+    <skill name="architecture-diagram" category="creative" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="ascii-art" category="creative" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="ascii-video" category="creative" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="baoyu-infographic" category="creative" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="claude-design" category="creative" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="comfyui" category="creative" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="design-md" category="creative" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="excalidraw" category="creative" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="humanizer" category="creative" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="manim-video" category="creative" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="p5js" category="creative" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="popular-web-designs" category="creative" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="pretext" category="creative" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="sketch" category="creative" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="songwriting-and-ai-music" category="creative" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="touchdesigner-mcp" category="creative" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="himalaya" category="email" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="codebase-inspection" category="github" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="github-auth" category="github" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="github-code-review" category="github" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="github-issues" category="github" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="github-pr-workflow" category="github" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="github-repo-management" category="github" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="gif-search" category="media" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="songsee" category="media" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="youtube-content" category="media" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="evaluating-llms-harness" category="mlops" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="huggingface-hub" category="mlops" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="llama-cpp" category="mlops" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="serving-llms-vllm" category="mlops" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="weights-and-biases" category="mlops" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="obsidian" category="note-taking" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="airtable" category="productivity" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="docx" category="productivity" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="google-workspace" category="productivity" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="maps" category="productivity" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="nano-pdf" category="productivity" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="notion" category="productivity" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="ocr-and-documents" category="productivity" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="pdf" category="productivity" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="powerpoint" category="productivity" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="teams-meeting-pipeline" category="productivity" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="xlsx" category="productivity" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="arxiv" category="research" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="blogwatcher" category="research" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="grounded-citations" category="research" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="llm-wiki" category="research" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="polymarket" category="research" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="research-paper-writing" category="research" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="openhue" category="smart-home" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="xurl" category="social-media" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="dogfood" category="software-development" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="hermes-agent-skill-authoring" category="software-development" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="inspecting-hermes-desktop-dom" category="software-development" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="node-inspect-debugger" category="software-development" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="plan" category="software-development" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="python-debugpy" category="software-development" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="requesting-code-review" category="software-development" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="simplify-code" category="software-development" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="spike" category="software-development" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="systematic-debugging" category="software-development" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="test-driven-development" category="software-development" source="builtin" trust="builtin" status="enabled"/>
+  </active_skills>
+  <active_mcp_servers count="3">
+    <mcp_server name="w-bridge" transport="http://0.0.0.0:8031/mcp" tools_selection="all" status="enabled"/>
+    <mcp_server name="memory" transport="http://127.0.0.1:1933/mcp" tools_selection="all" status="enabled"/>
+    <mcp_server name="obisidian" transport="http://127.0.0.1:27123/mcp/" tools_selection="all" status="enabled"/>
+  </active_mcp_servers>
+</profile>

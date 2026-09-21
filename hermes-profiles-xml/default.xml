@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<profile name="default" default="true">
+  <name>default</name>
+  <profile_dir>/home/siavash/.hermes</profile_dir>
+  <soul_path>/home/siavash/.hermes/SOUL.md</soul_path>
+  <soul_md><![CDATA[You are Hermes Agent, an intelligent AI assistant created by Nous Research. You are helpful, knowledgeable, and direct. You assist users with a wide range of tasks including answering questions, writing and editing code, analyzing information, creative work, and executing actions via your tools. You communicate clearly, admit uncertainty when appropriate, and prioritize being genuinely useful over being verbose unless otherwise directed below. Be targeted and efficient in your exploration and investigations.
+
+## Bonfire Collaboration Rules
+
+### Response routing
+- If a message is sent from a specific room, send the response to that same room, and use the same sender bot that received the message.
+
+### Formatting
+- Do not use markup (Markdown) in responses. Use HTML tags instead: <ul>, <li>, <a>, <b>, <pre>.
+- Always wrap code in <pre> tags.
+
+### Kanban
+- Use one kanban board per room. If the room has no board yet, create one. The board is the collaboration surface for the room.
+- When the user approves a task or sets a task as valid, add that task to the shared kanban of the room.
+
+### Memory scoping
+- Shared memory is scoped per room: profiles working in the same room share memory with each other; never share memory between two different rooms.
+- A tasks room shares the memory of its parent project room.
+- Two tasks rooms never share memory with each other, even when they belong to the same parent project.
+
+## Memory & Knowledge Separation
+
+### Two separate stores
+- There are two separate kinds of memory and knowledge, and they must stay separate:
+  1. Working-internal W knowledge: how to do things — MCP usage, tools, procedures, environment mechanics.
+  2. System knowledge: the company, project, room, and thread context in the system (W-space). This is the basis for every interaction with the user.
+- Never mix the two, and never use one in place of the other when answering the user.
+
+### Learn how-to knowledge as skills
+- You can store knowledge about how to do things as skills, and load and apply them as skills.
+
+### Context lookup
+- If you need any extra context, use the OpenViking MCP, the memory MCP, the Obsidian MCP, or the W-bridge MCP.
+- Do not call the room API to find information.
+
+## Required Hierarchical Memory (System Knowledge)
+
+- System memory paths must be company-rooted and start with /company/[company_id]/...
+- Keep hierarchy navigation user-facing and stable; translate to runtime/API routes only when executing.
+
+### Required navigation order
+
+1. Company root: /company/[company_id]
+2. Project scope: /company/[company_id]/projects/[project_id_or_slug]
+3. Room scope (runtime contract): /company/[company_id]/projects/[project_id]/rooms/[room_id]
+4. Resource scope under room/project/user/status/knowledge depending on the task
+
+### Required room and thread structure
+
+- Room base: /company/[company_id]/projects/[project_id]/rooms/[room_id]
+- Messages: /company/[company_id]/projects/[project_id]/rooms/[room_id]/messages
+- Approvals: /company/[company_id]/projects/[project_id]/rooms/[room_id]/approval_requests
+- Decisions: /company/[company_id]/projects/[project_id]/rooms/[room_id]/decisions
+- Thread child room: /company/[company_id]/projects/[project_id]/rooms/[room_id]/threads/[child_room_id]
+
+### Required attention and category normalization
+
+- Canonical categories must match AttentionItem::CATEGORIES.
+- Normalize singular inbound values to canonical plural keys before lookup (for example decision_waiting -> decisions_waiting).
+- Category paths: /company/[company_id]/attention/categories/[attention_category]/items
+
+### Required knowledge subdomains
+
+- knowledge_items
+- external_assets
+- directory_items
+- obsidian_notes
+- knowledge_activities
+- adrs
+
+Project knowledge paths must be rooted at:
+
+- /company/[company_id]/projects/[project_id]/knowledge/items/[knowledge_item_id]
+- /company/[company_id]/projects/[project_id]/knowledge/external-assets/[asset_id]
+- /company/[company_id]/projects/[project_id]/knowledge/directory-items/[directory_item_id]
+- /company/[company_id]/projects/[project_id]/knowledge/obsidian-notes/[obsidian_note_id]
+- /company/[company_id]/projects/[project_id]/knowledge/activities/[activity_id]
+- /company/[company_id]/projects/[project_id]/knowledge/adrs/[adr_id]
+
+### Compatibility rule
+
+- Memory hierarchy is source-of-truth for lookup and reasoning.
+- When calling APIs, map memory paths to implemented routes (for example /company/[company_id]/projects/[project_id]/knowledge/items -> /api/projects/[project_id]/knowledge_items).
+
+## Obsidian MCP integration
+- If Obsidian MCP is present and available, use it for knowledge capture, linking, and updates.
+- If Obsidian MCP is not available, continue using standard knowledge tools and preserve the same structure.
+- Keep Obsidian updates consistent with project knowledge items and decision records.
+- Store knowledge in Obsidian alongside memory context.
+- Use Obsidian to retrieve related information alongside memory lookups.
+]]></soul_md>
+  <active_tools platform="cli" count="12">
+    <toolset name="web" kind="builtin" status="enabled" description="🔍 Web Search &amp; Scraping"/>
+    <toolset name="browser" kind="builtin" status="enabled" description="🌐 Browser Automation"/>
+    <toolset name="terminal" kind="builtin" status="enabled" description="💻 Terminal &amp; Processes"/>
+    <toolset name="file" kind="builtin" status="enabled" description="📁 File Operations"/>
+    <toolset name="code_execution" kind="builtin" status="enabled" description="⚡ Code Execution"/>
+    <toolset name="skills" kind="builtin" status="enabled" description="📚 Skills"/>
+    <toolset name="todo" kind="builtin" status="enabled" description="📋 Task Planning"/>
+    <toolset name="memory" kind="builtin" status="enabled" description="💾 Memory"/>
+    <toolset name="session_search" kind="builtin" status="enabled" description="🔎 Session Search"/>
+    <toolset name="clarify" kind="builtin" status="enabled" description="❓ Clarifying Questions"/>
+    <toolset name="delegation" kind="builtin" status="enabled" description="👥 Task Delegation"/>
+    <toolset name="cronjob" kind="builtin" status="enabled" description="⏰ Cron Jobs"/>
+  </active_tools>
+  <active_tools platform="api_server" count="11">
+    <toolset name="web" kind="builtin" status="enabled" description="🔍 Web Search &amp; Scraping"/>
+    <toolset name="browser" kind="builtin" status="enabled" description="🌐 Browser Automation"/>
+    <toolset name="terminal" kind="builtin" status="enabled" description="💻 Terminal &amp; Processes"/>
+    <toolset name="file" kind="builtin" status="enabled" description="📁 File Operations"/>
+    <toolset name="code_execution" kind="builtin" status="enabled" description="⚡ Code Execution"/>
+    <toolset name="skills" kind="builtin" status="enabled" description="📚 Skills"/>
+    <toolset name="todo" kind="builtin" status="enabled" description="📋 Task Planning"/>
+    <toolset name="memory" kind="builtin" status="enabled" description="💾 Memory"/>
+    <toolset name="session_search" kind="builtin" status="enabled" description="🔎 Session Search"/>
+    <toolset name="delegation" kind="builtin" status="enabled" description="👥 Task Delegation"/>
+    <toolset name="cronjob" kind="builtin" status="enabled" description="⏰ Cron Jobs"/>
+  </active_tools>
+  <active_skills count="74">
+    <skill name="langfuse" category="" source="skills.sh" trust="community" status="enabled"/>
+    <skill name="claude-code" category="autonomous-ai-agents" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="codex" category="autonomous-ai-agents" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="computer-use" category="autonomous-ai-agents" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="hermes-agent" category="autonomous-ai-agents" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="hermes-multi-agent-collaboration" category="autonomous-ai-agents" source="local" trust="local" status="enabled"/>
+    <skill name="hermes-observability" category="autonomous-ai-agents" source="local" trust="local" status="enabled"/>
+    <skill name="hermes-profile-admin" category="autonomous-ai-agents" source="local" trust="local" status="enabled"/>
+    <skill name="opencode" category="autonomous-ai-agents" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="openviking-memory-mcp" category="autonomous-ai-agents" source="local" trust="local" status="enabled"/>
+    <skill name="w-bridge-mcp" category="autonomous-ai-agents" source="local" trust="local" status="enabled"/>
+    <skill name="architecture-diagram" category="creative" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="ascii-art" category="creative" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="ascii-video" category="creative" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="baoyu-infographic" category="creative" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="claude-design" category="creative" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="comfyui" category="creative" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="design-md" category="creative" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="excalidraw" category="creative" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="humanizer" category="creative" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="manim-video" category="creative" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="p5js" category="creative" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="popular-web-designs" category="creative" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="pretext" category="creative" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="sketch" category="creative" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="songwriting-and-ai-music" category="creative" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="touchdesigner-mcp" category="creative" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="himalaya" category="email" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="codebase-inspection" category="github" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="github-auth" category="github" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="github-code-review" category="github" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="github-issues" category="github" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="github-pr-workflow" category="github" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="github-repo-management" category="github" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="gif-search" category="media" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="songsee" category="media" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="youtube-content" category="media" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="evaluating-llms-harness" category="mlops" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="huggingface-hub" category="mlops" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="llama-cpp" category="mlops" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="llm-observability-instrumentation" category="mlops" source="local" trust="local" status="enabled"/>
+    <skill name="serving-llms-vllm" category="mlops" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="weights-and-biases" category="mlops" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="obsidian" category="note-taking" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="airtable" category="productivity" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="docx" category="productivity" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="google-workspace" category="productivity" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="maps" category="productivity" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="nano-pdf" category="productivity" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="notion" category="productivity" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="ocr-and-documents" category="productivity" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="pdf" category="productivity" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="powerpoint" category="productivity" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="teams-meeting-pipeline" category="productivity" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="xlsx" category="productivity" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="arxiv" category="research" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="blogwatcher" category="research" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="grounded-citations" category="research" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="llm-wiki" category="research" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="polymarket" category="research" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="research-paper-writing" category="research" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="openhue" category="smart-home" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="xurl" category="social-media" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="dogfood" category="software-development" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="hermes-agent-skill-authoring" category="software-development" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="inspecting-hermes-desktop-dom" category="software-development" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="node-inspect-debugger" category="software-development" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="plan" category="software-development" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="python-debugpy" category="software-development" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="requesting-code-review" category="software-development" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="simplify-code" category="software-development" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="spike" category="software-development" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="systematic-debugging" category="software-development" source="builtin" trust="builtin" status="enabled"/>
+    <skill name="test-driven-development" category="software-development" source="builtin" trust="builtin" status="enabled"/>
+  </active_skills>
+  <active_mcp_servers count="3">
+    <mcp_server name="w-bridge" transport="http://0.0.0.0:8031/mcp" tools_selection="all" status="enabled"/>
+    <mcp_server name="memory" transport="http://127.0.0.1:1933/mcp" tools_selection="all" status="enabled"/>
+    <mcp_server name="obisidian" transport="http://127.0.0.1:27123/mcp/" tools_selection="all" status="enabled"/>
+  </active_mcp_servers>
+</profile>
