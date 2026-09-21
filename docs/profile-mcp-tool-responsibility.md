@@ -13,8 +13,25 @@ This document defines which MCP tools should be considered core skills of each p
 Related document:
 - `profile-description.md` for concise role descriptions of each main and bot profile.
 - `profile-workflows-and-interactions.md` for workflow and interaction charts.
+- `bonfire/docs/MCP_ENTITY.md` and `bonfire/docs/AI_PROFILE_MCP_ENTITY.md` (mirrored under `W-ai/docs/bonfire/docs/`) for persistence details.
 
 It also suggests secondary ownership for bot profiles (`project manager`, `business analyst`, `market research`, `coder`, `ask from w`) where role fit is strong.
+
+## MCP Persistence Mapping
+
+The profile-to-MCP ownership model is persisted in Bonfire with two tables:
+
+- `mcps`: MCP endpoint configuration catalog (`name`, `transport`, `url`, `authentication`, optional `bearer_token`, `status`).
+- `ai_profile_mcps`: join table from `ai_profiles` to `mcps` with per-profile activation via `active`.
+
+Key constraint:
+
+- Unique assignment per profile and MCP endpoint (`ai_profile_id`, `mcp_id`).
+
+Practical routing impact:
+
+- Profile responsibility in this document defines who should use tools.
+- `ai_profile_mcps.active` defines which MCP integrations are actually enabled per profile at runtime.
 
 ## Assignment Principles
 
