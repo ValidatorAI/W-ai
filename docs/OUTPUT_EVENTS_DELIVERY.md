@@ -45,7 +45,7 @@ Non-attachment events are sent as JSON with this envelope:
   "event_id": 456,
   "group_id": "ed5f2fa4-fbcb-46cf-9411-14f7a72e9f65",
   "event_data": {
-    "actor": { "type": "User", "id": 1 },
+    "actor": { "type": "User", "id": 1, "username": "alice", "full_name": "Alice Johnson" },
     "target_type": "Message",
     "content": "Can you summarize this thread?",
     "content_payload": {
@@ -82,6 +82,10 @@ Receivers should parse the multipart payload and decode `event` as JSON.
   - For attachment events: `type: "file"` and file metadata.
   - For decision events: `type: "decision"` and approval context.
   - For metadata-only events, this may be `null`.
+- `event_data.actor.username`
+  - Creator username derived from the actor `name` attribute when available.
+- `event_data.actor.full_name`
+  - Creator full name derived from `effective_display_name` when available, otherwise from `name`.
 
 ### Knowledge Path Format
 
@@ -142,6 +146,64 @@ Receivers should parse the multipart payload and decode `event` as JSON.
 - approval_request_denied
 - approval_request_canceled
 - decision_approved
+- ai_setting_created
+- ai_setting_updated
+- ai_setting_deleted
+- mcp_created
+- mcp_updated
+- mcp_deleted
+- skill_created
+- skill_updated
+- skill_deleted
+- skill_learning_requested
+- ai_profile_created
+- ai_profile_updated
+- ai_profile_deleted
+
+## AI Admin CRUD Events
+
+The AI Admin area now emits output events for successful create, update, and delete operations on core AI configuration entities.
+
+### Coverage
+
+- AI settings
+  - `ai_setting_created`
+  - `ai_setting_updated`
+  - `ai_setting_deleted`
+- MCP servers
+  - `mcp_created`
+  - `mcp_updated`
+  - `mcp_deleted`
+- Skills
+  - `skill_created`
+  - `skill_updated`
+  - `skill_deleted`
+- AI profiles
+  - `ai_profile_created`
+  - `ai_profile_updated`
+  - `ai_profile_deleted`
+
+### Emission Rules
+
+- Events are emitted only on successful CRUD operations.
+- Invalid form submissions or validation failures do not emit CRUD events.
+- Update events include `event_data.changed_fields` (excluding timestamp-only changes).
+
+### Sensitive Field Handling
+
+AI Admin payloads avoid storing raw secret and large free-text values in `event_data`.
+
+- MCP credentials and command-like fields:
+  - No raw `bearer_token` value is stored.
+  - Metadata keys are used instead: `*_present`, `*_length`.
+- Skill content:
+  - No raw `description` or `skill_text` values are stored.
+  - Metadata keys are used instead: `description_present`, `description_length`, `skill_text_present`, `skill_text_length`.
+- Profile content:
+  - No raw `soul` value is stored.
+  - Metadata keys are used instead: `soul_present`, `soul_length`.
+
+This keeps output events useful for observability while reducing risk of sensitive content leakage.
 
 ## Operational Notes
 
