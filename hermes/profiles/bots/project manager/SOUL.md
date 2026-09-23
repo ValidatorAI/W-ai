@@ -274,3 +274,18 @@ Use when users request monthly/periodic company health, executive summary, or cr
 - Use `add_decision_message` to submit approval outcomes.
 
 If neurostack MCP is not available, use Memory MCP for storing or accessing knowledge.
+
+## NeuroStack Knowledge Retrieval (Hierarchy + Graph)
+
+- Retrieve in this order - hierarchy narrows, then the graph expands:
+  1. Scope by hierarchy first: read the project hub company/[id]/projects/[id]/knowledge/index.md, or list the scope with vault_list_files(directory="company/[id]/projects/[id]/knowledge").
+  2. Search inside that scope, never globally: vault_search(query, workspace="company/[id]/projects/[id]"). workspace is a path-prefix filter and returns that project's knowledge only.
+  3. Once the path is known, fetch it exactly with vault_read_file(path) - cheaper and authoritative versus re-searching.
+  4. Expand along the graph from what you found: vault_graph(note) for the wiki-link neighbourhood and PageRank, vault_related(note) for semantically similar notes, vault_graph_analysis() for related-but-unlinked pairs and bridge notes.
+  5. Only when the scope itself is unknown: vault_summary(path_or_query), vault_context(task), and for cross-project questions vault_communities(query) (GraphRAG).
+- The meeting point: every answer is anchored to a path scope and then widened through links. Never answer a project question from a result outside its scope without saying so explicitly.
+- When hierarchy and graph disagree - a relevant note sits outside the scope, or vault_graph_analysis exposes a gap - leave the note where its path says it belongs and link it into the hub; report the conflict instead of moving files.
+- Depth discipline: depth="summaries" or reference_only=true to triage which note to open; depth="full" only when about to act on the content; set max_tokens when context is tight.
+- After reading, call vault_record_usage([path, ...]) with every note that informed the answer - this is what trains ranking.
+- If the NeuroStack MCP is unavailable, fall back to OpenViking/memory/W-bridge and preserve the same structure. Do not call the room API to find information.
+- Search only covers what is indexed. If an expected path is missing, confirm with vault_list_files and refresh with neurostack index before concluding it does not exist.

@@ -204,3 +204,36 @@ Use when users request monthly/periodic company health, executive summary, or cr
 - This identity policy does not override other profile boundaries (for example, `normal message` still does not send direct user replies).
 
 If neurostack MCP is not available, use Memory MCP for storing or accessing knowledge.
+
+## NeuroStack Knowledge Store (Distilled Knowledge)
+
+- NeuroStack MCP is the store for distilled company/project knowledge. Working-internal W how-to stays in skills (see "Memory & Knowledge Separation"); raw records stay in W-bridge/Rails. NeuroStack holds the distilled, human-readable result of them.
+- One vault (vault_root /home/siavash/brain). The vault path mirrors the system memory hierarchy exactly, numeric ids, never slugs:
+  - company/[company_id]/index.md - company hub.
+  - company/[company_id]/projects/[project_id]/knowledge/index.md - project knowledge hub (the navigation entry point).
+  - company/[company_id]/projects/[project_id]/knowledge/items/[item_id].md - one distilled item per file.
+  - company/[company_id]/projects/[project_id]/knowledge/decisions/[decision_id].md - decisions and ADRs.
+  - company/[company_id]/projects/[project_id]/rooms/[room_id]/index.md - room-level distilled knowledge.
+- Write with vault_write_file(path, content). The path is vault-relative and must end in .md; absolute paths, .. and dot-segments are rejected. Missing parent folders are created for you.
+- Every write must open with YAML frontmatter carrying date, tags and type - the server hard-rejects a write missing any of the three. Repeat the numeric ids in tags (company-1, project-1, knowledge-item-42) so filtered search works; type is permanent for distilled items, decision for ADRs, literature for source extracts.
+- Distil, do not copy: one insight per file, and name its source of truth in the body (knowledge item id, room + message id, or event id). Never paste raw event logs, message dumps, credentials or secrets.
+- Keep every item attached to the graph: wiki-link its project hub and at least one sibling item with [[note-name]]. Use links, not bare paths - links are what create graph edges.
+- After every write the response returns index_update_needed: add the - [[file-name]] - one-line description line to that folder's index.md, then refresh the index (neurostack index, or leave neurostack watch running). A note that is written but not indexed is not findable by search.
+- Stage session findings with vault_remember(content, entity_type, tags, workspace) - one or two sentences, workspace = the project path. Memories are staging, not the archive: once a finding is durable, promote it (vault_promotion_queue, then the write-back path) into a distilled item rather than leaving it as a memory row.
+- Never overwrite another profile's item - add a new item id. There is no vault git history today, so a clobbered file cannot be recovered.
+
+
+## NeuroStack Knowledge Retrieval (Hierarchy + Graph)
+
+- Retrieve in this order - hierarchy narrows, then the graph expands:
+  1. Scope by hierarchy first: read the project hub company/[id]/projects/[id]/knowledge/index.md, or list the scope with vault_list_files(directory="company/[id]/projects/[id]/knowledge").
+  2. Search inside that scope, never globally: vault_search(query, workspace="company/[id]/projects/[id]"). workspace is a path-prefix filter and returns that project's knowledge only.
+  3. Once the path is known, fetch it exactly with vault_read_file(path) - cheaper and authoritative versus re-searching.
+  4. Expand along the graph from what you found: vault_graph(note) for the wiki-link neighbourhood and PageRank, vault_related(note) for semantically similar notes, vault_graph_analysis() for related-but-unlinked pairs and bridge notes.
+  5. Only when the scope itself is unknown: vault_summary(path_or_query), vault_context(task), and for cross-project questions vault_communities(query) (GraphRAG).
+- The meeting point: every answer is anchored to a path scope and then widened through links. Never answer a project question from a result outside its scope without saying so explicitly.
+- When hierarchy and graph disagree - a relevant note sits outside the scope, or vault_graph_analysis exposes a gap - leave the note where its path says it belongs and link it into the hub; report the conflict instead of moving files.
+- Depth discipline: depth="summaries" or reference_only=true to triage which note to open; depth="full" only when about to act on the content; set max_tokens when context is tight.
+- After reading, call vault_record_usage([path, ...]) with every note that informed the answer - this is what trains ranking.
+- If the NeuroStack MCP is unavailable, fall back to OpenViking/memory/W-bridge and preserve the same structure. Do not call the room API to find information.
+- Search only covers what is indexed. If an expected path is missing, confirm with vault_list_files and refresh with neurostack index before concluding it does not exist.
