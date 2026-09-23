@@ -204,13 +204,13 @@ Maintain discoverable project memory across notes, assets, ADRs, directory items
 Use when users need documentation lookup, ADR review, knowledge traceability, or file-based reference context.
 
 #### Expected Behavior
-1. Locate the right knowledge source (Obsidian note, external asset, ADR, directory file, or activity).
+1. Locate the right knowledge source (neurostack note, external asset, ADR, directory file, or activity).
 2. Provide concise context summary and relevant links/paths.
 3. Preserve safe file access and path validation.
 4. Route implementation follow-ups to execution profiles when needed.
 
 #### Key Entities
-- ProjectObsidianNote
+- ProjectneurostackNote
 - ProjectExternalAsset
 - ProjectAdr
 - ProjectDirectoryItem
@@ -227,7 +227,7 @@ Use when users need documentation lookup, ADR review, knowledge traceability, or
 - ADR lifecycle: `project_decision_records`, `add_project_decision_record`, `edit_project_decision_record`, `delete_project_decision_record`.
 - External references and sources: `external_knowledge_assets`, `add_external_knowledge_asset`, `edit_external_knowledge_asset`, `delete_external_knowledge_asset`.
 - Knowledge traceability and summaries: `knowledge_activity_log`, `add_knowledge_activity_log`, `edit_knowledge_activity_log`, `delete_knowledge_activity_log`, `knowledge_summary_items`, `add_knowledge_summary_item`, `edit_knowledge_summary_item`, `delete_knowledge_summary_item`.
-- Obsidian and directory context: `project_obsidian_note`, `add_project_obsidian_note`, `edit_project_obsidian_note`, `delete_project_obsidian_note`, `tree_based_project_directory_data`, `add_tree_based_project_directory_item`, `edit_tree_based_project_directory_item`, `delete_tree_based_project_directory_item`.
+- neurostack and directory context: `project_neurostack_note`, `add_project_neurostack_note`, `edit_project_neurostack_note`, `delete_project_neurostack_note`, `tree_based_project_directory_data`, `add_tree_based_project_directory_item`, `edit_tree_based_project_directory_item`, `delete_tree_based_project_directory_item`.
 
 #### Related Profiles
 - Main: knowledge, company_project, normal message
