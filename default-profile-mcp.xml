@@ -10,8 +10,8 @@
     <tools_selection>all</tools_selection>
     <status>enabled</status>
   </mcp_server>
-  <mcp_server name="memory" enabled="true">
-    <name>memory</name>
+  <mcp_server name="Workspace memory" enabled="true">
+    <name>Workspace memory</name>
     <transport>http</transport>
     <url>http://127.0.0.1:1933/mcp</url>
     <authentication>none</authentication>
