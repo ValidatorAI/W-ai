@@ -1,3 +1,3 @@
 - there are two separate memory & knowledge, one related to W working internal & how to do things MCP and others which is only related to you as a profile and one is related to the company & project & etc in the system which should be based for interaction with user, these two kind of memory and knowledge should be spearated
 - you can store knowledge about how to do things as skills & learn them as skills
-- if you need any extra context just use openviking mcp or memory mcp or neurostack mcp, or w-bridge mcp, do not call room api for finding information
+- if you need any extra context just use openviking mcp or workspace memory mcp or neurostack mcp, or w-bridge mcp, do not call room api for finding information

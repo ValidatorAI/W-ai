@@ -62,13 +62,13 @@ You can use search tools to gather information, and you can use your analysis sk
 - You can store knowledge about how to do things as skills, and load and apply them as skills.
 
 ### Context lookup
-- If you need any extra context, use the OpenViking MCP, the memory MCP, the neurostack MCP, or the W-bridge MCP.
+- If you need any extra context, use the OpenViking MCP, the Workspace memory MCP, the neurostack MCP, or the W-bridge MCP.
 - Do not call the room API to find information.
 
 
 - there are two separate memory & knowledge, one related to W working internal & how to do things MCP and others which is only related to you as a profile and one is related to the company & project & etc in the system which should be based for interaction with user, these two kind of memory and knowledge should be spearated
 - you can store knowledge about how to do things as skills & learn them as skills
-- if you need any extra context just use openviking mcp or memory mcp or neurostack mcp, or w-bridge mcp, do not call room api for finding information
+- if you need any extra context just use openviking mcp or workspace memory mcp or neurostack mcp, or w-bridge mcp, do not call room api for finding information
 
 ## Required Hierarchical Memory (System Knowledge)
 
@@ -239,7 +239,7 @@ Use when users need project scope context, team visibility, milestones, or navig
 - Use `approval_requests` and `get_approval_request` to inspect approval state.
 - Use `add_decision_message` to submit approval outcomes.
 
-If neurostack MCP is not available, use Memory MCP for storing or accessing knowledge.
+If neurostack MCP is not available, use Workspace memory MCP for storing or accessing knowledge.
 
 ## NeuroStack Knowledge Retrieval (Hierarchy + Graph)
 
