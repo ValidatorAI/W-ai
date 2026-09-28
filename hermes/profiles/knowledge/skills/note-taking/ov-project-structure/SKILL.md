@@ -85,7 +85,8 @@ the filing action once in `knowledge/activities/` and once via w-bridge
   **read-modify-write** with `mode=replace`: obtain the anchor with `grep` on a bare token from the
   row (`grep(uri=<registry>, pattern="members/<N>.md")` → ~500-1,700 chars, versus 23,000+ for a
   full read of this registry), re-grep immediately before writing (siblings race),
-  `replace()` the one row line, concatenate your additive section, then assert
+  `replace()` the one row line, add **at most one provenance line** (§3c-bis — shared registries are
+  INDEX-ONLY: no `## Status update` section, no narrative), then assert
   (a) every pre-existing non-blank line is still present **except the row you flipped**,
   (b) the new row text is present, (c) the appended marker is present,
   (d) `vector_status=complete`. Report the missing-line list in the write log — `missing ==
@@ -105,6 +106,45 @@ the filing action once in `knowledge/activities/` and once via w-bridge
   fabricate the missing path.
 - Third-party add vs self-add: `actor_is_self_add` is `actor.id == member.id`. For project 5
   only the creator (User 1) self-added; every other member record must say third-party.
+### 3c-bis. Shared registries are INDEX-ONLY (shape rule, measured 2026-09-28)
+
+A `*/members/context.md`, a `*/rooms/context.md`, a project `context.md` and any `_index.md` are
+**shared** files: every card in a burst read-modify-writes them, and everything appended is paid for
+by every later reader. Measured before this rule: 171 registry files / 919,918 chars total; the 86
+`context.md` files average 5,619 chars (worst 23,152) and **63-72% of the big ones is prose, not
+index** — one `## Status update — <event> (card t_XXXX)` section per card, plus per-event narrative
+blocks, `superseded` correction paragraphs and duplicated evidence.
+
+Allowed in a shared registry:
+1. frontmatter (including `last_updated_by`, which you flip);
+2. stable conventions / path templates (<= ~15 lines, unchanged by events);
+3. **one pointer row or line per entity** — path, status, owning card;
+4. **at most ONE provenance line per event you filed**, <= ~120 chars:
+   `<date> — <event> — card t_XXXX — record <path>`;
+5. a pointer to the per-event record, never a copy of its content.
+
+Not allowed in a shared registry:
+* a `## Status update …` section, or any heading created per event;
+* per-event prose blocks (evidence, narrative, transaction ledgers, roster-history retellings);
+* corrective "superseded by …" paragraphs — **de-stale the sentence in place** with `edit` and let
+  the provenance line carry the event (never quote the stale token; §3c already says so);
+* content duplicated from a record you own.
+
+Where the narrative goes instead — the file that event already owns:
+`projects/<pid>/members/<user_id>.md`, `rooms/<rid>/context.md`, or
+`knowledge/activities/<event>.md`. Those are per-event files: no other card appends to them, they do
+not race, and a reader fetches one only when it wants that event.
+
+Size target, and how to check it without reading: keep a registry **under ~2,500 chars**. `write`
+reports `written_bytes` and `edit` reports the bytes written, so your own write response tells you
+the size — no read needed. `fs/stat` size is NOT usable for this (§7). If a registry is already over
+target, **split it** (move narrative out to the owning records, leave the index) instead of
+appending; if your edit would push it over target, that content belongs in a record file.
+
+Why this also reduces conflicts: the concurrency-safe write stops being "append a trailing section"
+(a growing write a sibling can duplicate) and becomes "flip one row + add one short line" — a small
+anchor with a stable shape.
+
 ### 3d. Refinements verified on card t_4bc70740 (User 2, project 5)
 - **Check for leftover work from crashed prior runs before writing.** This card had five
   reclaimed/crashed runs; verify `members/<id>.md` absent, the roster row still *pending*, and no

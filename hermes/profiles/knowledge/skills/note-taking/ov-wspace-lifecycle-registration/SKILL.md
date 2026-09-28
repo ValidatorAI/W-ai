@@ -659,7 +659,9 @@ have no record either; whether 4, 5 and 7 are project-6 members is a live-source
 card t_e582de08 (User 5, 06:24:48Z) was already on the board. Two rules follow:
 * **Never treat a sibling's forward-looking wording as truth, and never leave it standing.** A
   sentence that names *your* member id as unfiled must be rewritten in place (scoped down to the
-  genuinely open ids) and superseded by your own `## Status update` section — a `grep` on the final
+  genuinely open ids) — de-stale the sentence itself, do **not** add a `## Status update` section to
+  a shared registry (see ov-project-structure §3c-bis: registries are INDEX-ONLY, and the event is
+  carried by your own record file plus at most one provenance line). A `grep` on the final
   read-back is what proves the stale token is gone. Describe the removed wording; do **not** quote it
   in your correction prose.
 * **A burst member id can be absent from an earlier roster read for an innocent reason:** the reads
@@ -768,14 +770,19 @@ w-bridge and workspace-memory MCP tools are in the schema (no terminal/file tool
   race the flip and you get either a lost anchor or a duplicated additive sentence. Leave a handoff
   comment on the twin with the **verbatim anchor** of the row you wrote and a numbered list of the
   pending claims in your own files that its record must supersede, then close.
-* **`write mode=append` is the robust way to add a trailing section under concurrency.** Anchoring a
-  tail edit on text you read minutes earlier fails for two independent reasons measured on t_8f64be9b:
-  (a) a concurrent sibling rewrote the file between your read and your edit (the t_3dc40e87 card
-  rewrote `knowledge/activities/_index.md` mid-run, so the frontmatter and tail anchors vanished), and
-  (b) your own anchor can be subtly wrong — a `**not**` that the file stores as plain `not`. Append the
-  new `## Status update …` section instead, and keep exact-string `edit` calls to short anchors you have
-  just verified in a fresh `read`. Verify each edit by byte growth (a same-length replacement legitimately
-  reports an unchanged size) and finish with a per-file `grep` on the file itself.
+* **On a SHARED registry, do not append a trailing section — flip the row and add at most one
+  provenance line.** `write mode=append` is for a file your card alone owns (`members/<id>.md`,
+  `rooms/<rid>/context.md`, `knowledge/activities/<event>.md`); on a shared registry it is what grows
+  the file by one `## Status update …` block per card and makes every later reader pay for every
+  earlier card (see ov-project-structure §3c-bis — registries are INDEX-ONLY). Anchoring a
+  tail edit on text you read minutes earlier also fails for two independent reasons measured on
+  t_8f64be9b: (a) a concurrent sibling rewrote the file between your read and your edit (the
+  t_3dc40e87 card rewrote `knowledge/activities/_index.md` mid-run, so the frontmatter and tail
+  anchors vanished), and (b) your own anchor can be subtly wrong — a `**not**` that the file stores
+  as plain `not`. Get the anchor from a fresh single-file `grep` instead, and keep exact-string
+  `edit` calls to short anchors you just verified. Verify each edit by byte growth (a same-length
+  replacement legitimately reports an unchanged size) and finish with a per-file `grep` on the file
+  itself.
 * **A scope `grep` returning no hit for a file is NOT absence of that content.** With the default
   `node_limit`, `grep(uri=<project scope>, pattern=[…])` omitted `rooms/context.md` and
   `projects/7/context.md` entirely even though both contained the pattern (they matched fine when the
@@ -790,10 +797,10 @@ w-bridge and workspace-memory MCP tools are in the schema (no terminal/file tool
   the wait to do w-bridge work (`add_knowledge_activity_log`) or a `kanban_heartbeat`/board comment
   rather than abandoning the records you still owe.
 * **A same-burst sibling for a DIFFERENT member of the SAME project rewrites the SAME shared files — expect every anchor to miss once (measured on card t_14c3082e, project 6, 2026-09-25).** Two `project_member_added` cards fired 10 s apart (User 6 06:24:28Z = t_14c3082e; User 3 06:24:38Z = t_fb5d733a) and ran concurrently, each owning `members/<id>.md` **and** each read-modify-writing `members/context.md`, `projects/<pid>/context.md` and `knowledge/activities/_index.md`. What that means in practice:
-  - The **roster table is a shared RMW target**: the sibling flips it to add its member and its own `last_updated_by`, so your member's roster row is an edit *on top of* its version. Re-`read` immediately before each edit. A first pass where all four anchors on that file miss ("old_string not found") is not a defect — it is the sibling's write landing between your recon read and your edit.
+  - The **roster table is a shared RMW target**: the sibling flips it to add its member and its own `last_updated_by`, so your member's roster row is an edit *on top of* its version. Re-`grep` the single file immediately before each edit (cheaper and more current than a `read`). A first pass where all four anchors on that file miss ("old_string not found") is not a defect — it is the sibling's write landing between your recon read and your edit.
   - **The MCP `read` is served from the same indexed copy `viking_search` uses, so it can return the PRE-sibling body while `edit` matches DISK.** Freshness oracles: a repeat `read` returns the newer body, and `grep` on the single file returns raw disk lines (its line numbers let you anchor confidently). Never conclude "my write did not land" from a search/index hit — `viking_search` also lags minutes behind (`last_updated_by` in an index abstract still showed the sibling's card after disk carried mine).
   - Read the **sibling's own `knowledge/activities/membership_user<id>_registered.md`** before editing: it names the paths it touched and may already have incorporated your card's delegator-read roster into the shared intro (project 6: it had), so do not "correct" a sentence that is already right.
-  - Keep super-set anchors (`new = old + block`) to the single trailing `## Status update` append, run it once, then `grep` the block afterwards — a retry would duplicate it.
+  - Keep super-set anchors (`new = old + block`) to the single trailing **provenance line** (<= ~120 chars), run it once, then `grep` the block afterwards — a retry would duplicate it. Never a `## Status update` block: shared registries are INDEX-ONLY (ov-project-structure §3c-bis).
   - Post the handoff comment on the sibling card **before** completing: name the paths you filled and ask it not to re-write the shared registry. The sibling may still be `running` (both runs started in the same second under the same claim lock).
 
 ## Steps
