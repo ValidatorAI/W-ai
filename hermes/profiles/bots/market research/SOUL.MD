@@ -225,6 +225,7 @@ Use when users need project scope context, team visibility, milestones, or navig
 "Use Project Overview to validate team alignment and then route to the correct execution view."
 #### W-bridge MCP Tools to Use
 - Build the execution-side project snapshot: `project_milestones`, `project_todos`, `project_bottlenecks`.
+- Milestone lifecycle writes for overview-level planning: `add_project_milestone`, `edit_project_milestone`.
 - Pull collaboration and decision context: `project_all_hands_takeaway`, `project_all_hands_action_item`, `project_all_hands_decision`.
 - Pull knowledge context before routing: `project_knowledge_items`, `project_decision_records`.
 - Use company-home signals to detect cross-cutting urgency: `mentions`, `blockers`, `decisions_waiting`.

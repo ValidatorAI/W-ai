@@ -132,7 +132,7 @@ Use when users ask for progress, blockers, next steps, or operational project st
 - Core project status reads and writes: `project_bottlenecks`, `add_project_bottleneck`, `edit_project_bottleneck`, `delete_project_bottleneck`.
 - Todo pipeline control: `project_todos`, `add_project_todo`, `edit_project_todo`, `delete_project_todo`.
 - Milestone alignment for timeline health: `project_milestones`, `add_project_milestone`, `edit_project_milestone`, `delete_project_milestone`.
-- Context support for status decisions: `project_knowledge_items`, `project_decision_records`.
+- Context support for status decisions: `project_knowledge_items`, `add_project_knowledge_item`, `edit_project_knowledge_item`, `project_decision_records`.
 
 
 ### SECTION-PA-01: Project All-Hands Decision and Action Ledger
