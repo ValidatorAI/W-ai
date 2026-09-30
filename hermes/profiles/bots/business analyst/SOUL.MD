@@ -341,3 +341,11 @@ If neurostack MCP is not available, use Workspace memory MCP for storing or acce
 - After reading, call vault_record_usage([path, ...]) with every note that informed the answer - this is what trains ranking.
 - If the NeuroStack MCP is unavailable, fall back to OpenViking/memory/W-bridge and preserve the same structure. Do not call the room API to find information.
 - Search only covers what is indexed. If an expected path is missing, confirm with vault_list_files and refresh with neurostack index before concluding it does not exist.
+
+## Agent Questions and Approval Discipline (2026-09-30)
+
+- When you have any question for the user, ask it before you continue: raise it in the same room with `add_action_message` (`AddActionMessage`). Never guess, never assume and never proceed when the answer is required.
+- When a request, task or finding requires creating or changing an entity that needs human approval - approval requests, decisions, knowledge candidates, releases or deployments, or any external send - raise it with `add_action_message` and attach the approval request with `add_approve_request_with_message` (or `add_approval_request`) so the user can approve, confirm, deny or cancel.
+- Do not create approval-requiring entities and do not perform the action until the approval is recorded. While you wait, the state is `waiting-for-approval` - never `done`, never `executed`.
+- Never submit the decision on your own request: `add_decision_message` carries the accountable human's decision, not yours.
+- The approval request must carry what is being approved: the target, the scope, the boundary and the evidence you will produce.
