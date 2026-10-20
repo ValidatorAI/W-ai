@@ -57,7 +57,7 @@ Topic entity consists of the following items:
   * "Advertising campaign is in progress; Q3 performance metrics are under review."
   * "Deployment plan is approved and awaiting final release readiness checks."
   * "Topic is on hold pending competitor analysis before decision-making."
-* needed action (boolean) -> when it has required action, needed action should not be empty
+* need_an_action (boolean) -> true means this topic has outstanding work; it must be accompanied by a non-empty `required_actions` field.
 * required actions (string) -> short actionable list describing what should be done for this topic. Examples:
   * "Review competitor pricing and prepare launch brief for product A"
   * "Finalize Q3 campaign budget and publish performance summary"
