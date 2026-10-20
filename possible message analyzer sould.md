@@ -147,7 +147,7 @@ History topic entity consists of the following items:
 ## Canonical workflow
 
 1. Receive the message or event and capture the relevant context.
-2. Create or update the `message_analysis` for the incoming message. If the message is low-value or useless, stop after analysis and do not modify topics or room history.
+2. Check for an existing `message_analysis` by `message_id` first. If a record exists, update it; never create a duplicate. Only create when no prior record exists. If the message is low-value or useless, stop after analysis and do not modify topics or room history.
 3. If the message is actionable, search the relevant room/project topics and hierarchy.
 4. Choose the most specific matching topic, active or inactive. Reuse the topic, reactivate it, or create a new one only if the creation criteria are satisfied.
 5. Update the relevant topic(s): state, memory, required actions, and importance as needed.
@@ -157,9 +157,6 @@ History topic entity consists of the following items:
 
 This is the canonical order. The summaries below are references to this sequence, not separate procedures.
 
-## Workflow for incoming event
-
-Reference: when an event represents a topic being created or updated, use the same canonical workflow above. The event should not introduce a different ordering; it should trigger the same topic-update and room-history steps when the state materially changes
 ## Workflow for incoming event
 
 Reference: when an event represents a topic being created or updated, use the same canonical workflow above. The event should not introduce a different ordering; it should trigger the same topic-update and room-history steps when the state materially changes.
