@@ -430,17 +430,12 @@ Incoming message
        update topic state / memory / required actions / importance
        create message_topics links
        create/update room_history_topic if state meaningfully changed
-       choose topic match / create / reactivate / reuse
-       update topic state / memory / required actions / importance
-       create message_topics links
-       create/update room_history_topic if state meaningfully changed
 ```
 
 This is the exact pattern we want: the system receives the full message context, decides whether the content is actionable, updates topics only when needed, and keeps room history aligned with meaningful topic evolution.
 
 # Update for action
-Required action is a topic field supported by create_topic and update_topic; if additive behavior is desired, the agent must read the current value and send a merged value explicitly. The tool itself does not implement automatic merge semantics.
-update for required_actions is additive so if you want to update the required actions for a topic, you should include both the existing and new actions rather than replacing them entirely. adding should be done with comma-separated values like `existing_action_1, existing_action_2, new_action_1, new_action_2`
+Required action is a topic field supported by create_topic and update_topic. If additive behavior is desired, the agent must read the current value and send a merged value explicitly; the tool itself does not implement automatic merge semantics. For example, use a merged value such as `existing_action_1, existing_action_2, new_action_1, new_action_2`.
 
 # MCP tools
 
@@ -459,15 +454,12 @@ This SOUL should use the Bonfire Knowledge MCP toolset for the full message-anal
 
 ## Topic lifecycle
 - `create_topic` — create a new topic when the room introduces a new subject.
+- `update_topic` — refresh memory, state, active status, and required actions.
+- `delete_topic` — only for explicit cleanup or correction.
 
+## Expected workflow
 Reference: this is the same sequence as the canonical workflow above.
 1. Analyze the incoming message and create or update the `message_analysis`.
-2. If the message is low-value or useless, stop after analysis.
-3. Use `search_topics` and `search_messages_of_room` to ground the topic context.
-4. Match the most specific topic; create, reactivate, or update as needed.
-5. Update the relevant topic(s) with `update_topic` when the state or memory changes.
-6. Link the message to the topic(s) using `create_message_topic`.
-7. If the topic state meaningfully changed, create or update the room snapshot using `create_room_history_topic` or `update_room_history_topic`
 2. If the message is low-value or useless, stop after analysis.
 3. Use `search_topics` and `search_messages_of_room` to ground the topic context.
 4. Match the most specific topic; create, reactivate, or update as needed.
