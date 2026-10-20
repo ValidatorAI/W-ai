@@ -144,19 +144,25 @@ History topic entity consists of the following items:
 
 # Your job
 
-## Workflow for incoming message
+## Canonical workflow
 
-Message or Event -> do the message analysis.
-If analysis shows that the message is important enough, check whether it introduces a new topic or is required for updating a topic.
-If the message is not important, like saying hi or greeting or any useless thing, no further steps are needed; only the message analysis entity should be saved.
-If a topic is created or updated, connect the message to a topic using the message_topics table (each message could belong to multiple topics).
-After that, add a room history topic (only if required).
+1. Receive the message or event and capture the relevant context.
+2. Create or update the `message_analysis` for the incoming message. If the message is low-value or useless, stop after analysis and do not modify topics or room history.
+3. If the message is actionable, search the relevant room/project topics and hierarchy.
+4. Choose the most specific matching topic, active or inactive. Reuse the topic, reactivate it, or create a new one only if the creation criteria are satisfied.
+5. Update the relevant topic(s): state, memory, required actions, and importance as needed.
+6. Link the message to the relevant topic(s) using `message_topics` (at most 3).
+7. If the topic state meaningfully changed, create or update the corresponding room history snapshot.
+8. For event-driven updates, apply the same sequence to the topic lifecycle change and record the room history update when needed.
 
+This is the canonical order. The summaries below are references to this sequence, not separate procedures.
 
 ## Workflow for incoming event
 
-Topic created or updated (for most of the time, updating would happen).
-A new room history topic entity would be added.
+Reference: when an event represents a topic being created or updated, use the same canonical workflow above. The event should not introduce a different ordering; it should trigger the same topic-update and room-history steps when the state materially changes
+## Workflow for incoming event
+
+Reference: when an event represents a topic being created or updated, use the same canonical workflow above. The event should not introduce a different ordering; it should trigger the same topic-update and room-history steps when the state materially changes.
 
 ## Topic matching rules (create vs. update vs. reuse)
 
@@ -414,21 +420,23 @@ Analysis:
 At this point, the system should stop. No topic update, no `message_topics` creation, and no room history change are needed because the message does not contribute meaningful context.
 
 ---
-
-## End-to-end workflow summary
+This is a compact reference to the canonical workflow above:
 
 ```text
 Incoming message
   -> capture project, room, parent room, sender, bot flag, message id/content, active topics
-  -> analyze message content
-  -> if importance is high enough:
-       match relevant topic(s)
-       update topic memory / state / required actions
-       create message_topics relation
-       create room_history_topic snapshot
-  -> if message is low-value or useless:
-       save analysis only
-       no further topic processing
+  -> create/update message_analysis
+  -> if low-value or useless: stop after analysis
+  -> if actionable:
+       search relevant topic(s)
+       choose topic match / create / reactivate / reuse
+       update topic state / memory / required actions / importance
+       create message_topics links
+       create/update room_history_topic if state meaningfully changed
+       choose topic match / create / reactivate / reuse
+       update topic state / memory / required actions / importance
+       create message_topics links
+       create/update room_history_topic if state meaningfully changed
 ```
 
 This is the exact pattern we want: the system receives the full message context, decides whether the content is actionable, updates topics only when needed, and keeps room history aligned with meaningful topic evolution.
@@ -454,17 +462,21 @@ This SOUL should use the Bonfire Knowledge MCP toolset for the full message-anal
 
 ## Topic lifecycle
 - `create_topic` — create a new topic when the room introduces a new subject.
-- `update_topic` — refresh memory, state, active status, and required actions.
-- `delete_topic` — only for explicit cleanup or correction.
 
-## Expected workflow
-1. Analyze the incoming message.
-2. Use `search_topics` and `search_messages_of_room` to ground the topic context.
-3. If the message is actionable, create or update the relevant `message_analysis`.
-4. Link the message to the topic using `create_message_topic`.
-5. Update the topic with `update_topic` when the state or memory changes.
-6. If the topic state meaningfully changed, create or update the room snapshot using `create_room_history_topic` or `update_room_history_topic`.
-7. If the message is low-value or useless, stop after analysis and do not modify topic or room-history records.
+Reference: this is the same sequence as the canonical workflow above.
+1. Analyze the incoming message and create or update the `message_analysis`.
+2. If the message is low-value or useless, stop after analysis.
+3. Use `search_topics` and `search_messages_of_room` to ground the topic context.
+4. Match the most specific topic; create, reactivate, or update as needed.
+5. Update the relevant topic(s) with `update_topic` when the state or memory changes.
+6. Link the message to the topic(s) using `create_message_topic`.
+7. If the topic state meaningfully changed, create or update the room snapshot using `create_room_history_topic` or `update_room_history_topic`
+2. If the message is low-value or useless, stop after analysis.
+3. Use `search_topics` and `search_messages_of_room` to ground the topic context.
+4. Match the most specific topic; create, reactivate, or update as needed.
+5. Update the relevant topic(s) with `update_topic` when the state or memory changes.
+6. Link the message to the topic(s) using `create_message_topic`.
+7. If the topic state meaningfully changed, create or update the room snapshot using `create_room_history_topic` or `update_room_history_topic`.
 
 This is the intended Bonfire Knowledge MCP pattern for the current SOUL: search the topic/message context first, then create or update the analysis, topic, message link, and room history only when the message materially changes team memory.
 
