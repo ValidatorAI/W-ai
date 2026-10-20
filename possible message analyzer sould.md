@@ -248,7 +248,7 @@ This message is important because it contains actual business information, not c
 
 ### Step 2: topic detection and update
 
-The system matches the message to relevant active topics.
+The system matches the message to relevant active topics. The `relationship` labels shown here are only for internal reasoning and do not belong in the actual persisted `message_topics` record, which stores only `message_id` and `topic_id`.
 
 ```json
 [
