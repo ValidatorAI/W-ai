@@ -65,6 +65,30 @@ Topic entity consists of the following items:
   * "Collect customer feedback, summarize pain points, and propose next iteration"
   * "Draft marketing messaging for the new feature launch and align with sales"
 
+### What is topic tool call log
+
+Topic tool call log is a historical audit trail of tool invocations that happened in relation to a topic, room, or project. It captures the previous system actions that shaped the current topic context, especially when an automated tool changed state, updated a record, or performed a decision-support action.
+
+Topic tool call log entity consists of the following items:
+* id -> internal record identifier
+* topic_id -> topic this tool call pertains to, if the action was topic-specific
+* room_id -> room in which the action occurred, if applicable
+* project_id -> project context in which the action occurred, if applicable
+* created_date -> when the tool call was made
+* used_tool_name -> the tool or operation invoked, such as `update_topic`, `search_topics`, `create_message_topic`, or other operational tools
+* target_entity_id -> the entity that was changed or referenced by the tool invocation, when applicable
+* change_log -> a summary of what the tool changed or how the context was updated
+* why_was_it_required -> the reason the tool was required, such as state update, missing context, action resolution, or topic continuity
+
+Use this entity when the analyzer needs to understand prior tool activity for a specific topic before making a decision. The relevant history should be pulled from the most recent tool call log entries for that topic, room, or project to reconstruct the background and avoid repeating outdated or contradictory actions.
+
+When present, the tool call log should be treated as supporting context, not as the primary topic memory. The current topic memory and state still take precedence, but prior tool call logs may be read to answer questions like:
+* What changed recently on this topic?
+* Why was a prior action required?
+* What tools were already used for this topic?
+* Was the topic previously updated or reactivated in this room/project?
+* Which entity was affected by the last relevant tool call?
+
 ### What is message analysis
 
 Message analysis entity is for storing the result of the analysis of an incoming message.
@@ -148,12 +172,14 @@ History topic entity consists of the following items:
 
 1. Receive the message or event and capture the relevant context.
 2. Check for an existing `message_analysis` by `message_id` first. If a record exists, update it; never create a duplicate. Only create when no prior record exists. If the message is low-value or useless, stop after analysis and do not modify topics or room history.
-3. If the message is actionable, search the relevant room/project topics and hierarchy.
+3. If the message is actionable, search the relevant room/project topics and hierarchy. If the topic is ambiguous, under-specified, or the message might depend on ongoing topic state, retrieve the recent `topic_tool_call_log` entries for that specific topic, room, or project to understand what tools were previously used and why.
 4. Choose the most specific matching topic, active or inactive. Reuse the topic, reactivate it, or create a new one only if the creation criteria are satisfied.
 5. Update the relevant topic(s): state, memory, required actions, and importance as needed.
 6. Link the message to the relevant topic(s) using `message_topics` (at most 3).
 7. If the topic state meaningfully changed, create or update the corresponding room history snapshot.
 8. For event-driven updates, apply the same sequence to the topic lifecycle change and record the room history update when needed.
+
+Use of prior topic tool call logs should be opportunistic and contextual: fetch them only when the tool history is likely to clarify the current topic state, resolve ambiguity, or explain a recent action chain. Do not read historical tool logs for every message; use them as a targeted context check when needed for continuity.
 
 This is the canonical order. The summaries below are references to this sequence, not separate procedures.
 
@@ -167,8 +193,9 @@ Always search before deciding. Never create a topic without searching first.
 
 Procedure:
 1. Call `search_topics` (scoped to the room/project) using the message tags and key nouns. Call `room_topic_tree` to see where the message would fit in the hierarchy.
-2. Pick the most specific matching topic, active or inactive.
-3. Decide using this table:
+2. If the message is not fully clear, overlaps with a prior topic state, or depends on recent tool-driven updates, retrieve recent `topic_tool_call_log` entries for the matching topic, relevant room, or project to recover prior context and required actions. Use those logs to disambiguate the current topic and to understand whether the last tool action was a state change, reactivation, or decision support step.
+3. Pick the most specific matching topic, active or inactive.
+4. Decide using this table:
 
 | Situation | Action |
 |---|---|
@@ -177,6 +204,8 @@ Procedure:
 | Matches an inactive topic | Reactivate with `update_topic` (set active), do not create a duplicate |
 | Matches only a broad parent, but the message is a distinct subject with its own state or actions | Create a child topic under that parent |
 | Matches nothing | Create a new topic, only if the creation criteria below are met |
+
+Before creating a new topic, check the recent `topic_tool_call_log` entries for the room and project to confirm there is not a previously active or inactive topic whose earlier tool actions indicate continuity or a missed reactivation. If earlier entries show that the work was already handled under a similar topic, reuse or reactivate that topic rather than creating a duplicate.
 
 Creation criteria (all must be true):
 - No existing topic, active or inactive, covers the subject.
