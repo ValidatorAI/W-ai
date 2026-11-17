@@ -1,0 +1,60 @@
+{
+ "projects": {
+  "cobalt": 8,
+  "relay": 9
+ },
+ "rooms": {
+  "cobalt-main": 8,
+  "cobalt-data": 9,
+  "relay-main": 11,
+  "relay-security": 12,
+  "receipts-build": 1,
+  "receipts": 1,
+  "receipts-growth": 2,
+  "receipts-founders": 3,
+  "receipts-partners": 4
+ },
+ "threads": {
+  "attribution-jobs": 13,
+  "pii-scan": 14,
+  "pricing-followup": 15
+ },
+ "dms": {
+  "siavash-wai": 16,
+  "jason-wai": 17,
+  "flux-attempt": {
+   "code": 200,
+   "resp": "{'room': {'id': 18, 'type': 'Rooms::Direct', 'name': None, '"
+  }
+ },
+ "seed_ops": [
+  {
+   "op": "sql_grant",
+   "project": 8,
+   "user": 2,
+   "api_code": 422
+  },
+  {
+   "op": "sql_grant",
+   "project": 8,
+   "user": 3,
+   "api_code": 422
+  },
+  {
+   "op": "sql_grant",
+   "project": 9,
+   "user": 2,
+   "api_code": 422
+  },
+  {
+   "op": "sql_membership_bots",
+   "rows": 14,
+   "authorized": "user 2026-11-16"
+  },
+  {
+   "op": "thread_membership_seed2",
+   "note": "most rows pre-existed; verified coverage",
+   "ts": "2026-11-16 11:40:17"
+  }
+ ]
+}

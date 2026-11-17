@@ -1,7 +1,7 @@
 # Mention / requested review (resolved / dismissed)
 
 Type: input-processing skill
-Apply when: events `mention_resolved` or `mention_dismissed`.
+Apply when: events `mention_resolved`, `mention_dismissed`, or `mention_created`.
 
 ## Procedure
 
@@ -49,3 +49,12 @@ After **each** state-changing tool call, call `create_tool_cal_log` (knowledge-m
 - Never overwrite existing text with `edit_*`: fetch, merge, write back.
 - Attention statuses are exactly `pending` / `resolved` / `dismissed`.
 - Event delivery is at-least-once: re-delivery has the same `group_id` / `event_type` / `event_id`. Check `tool_cal_logs` filtered by `target_entity_id` before acting a second time.
+
+## `mention_created` (added 2026-11-13)
+
+Apply when: a `mention_created` event arrives (a person or profile was flagged).
+
+1. Read the item: `mentions(item_id: <event_id>)`.
+2. Route it exactly once when the mentioned user belongs to a profile you coordinate: `create_ai_task(description: "Respond to mention: <title>", room_id: <item.room_id>, project_id: <item.project_id>, assigneee_profile: <profile>, input_event_entity_id: <event_id>, proposed_task_context: "<context>")` — `input_event_entity_id` is what later lets `mention_resolved` find and close the task with cost (`ai_task_cost` then `update_ai_task(finished: true)`).
+3. Dedupe first: `ai_tasks(input_event_entity_id: <event_id>)`; if a task already exists for the same event or same (title, room), do nothing.
+4. Then `create_tool_cal_log` recording the created task id — no other writes.

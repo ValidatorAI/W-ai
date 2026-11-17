@@ -20,7 +20,7 @@
 > IDs: AN=analysis, TP=topic, RH=room-history, TK=tasks, EV=event-handling per
 > skill, AP=approvals, DS=decisions, AT=attention, KN=knowledge, IA=interaction,
 > MS=messaging, WA=w_ai scope, XD=cross-dedup, OR=ordering, ST=state-truth,
-> HR=harness.
+> HR=harness, PJ=project-creation, HI=human-interaction-events.
 
 ---
 
@@ -148,6 +148,7 @@
 - [ ] EV-39 project_updated → cosmetic edits produce NOTHING (commonest outcome must be observed as commonest); material → material_changes after pending-equivalent check; open tasks re-scope note
 - [ ] EV-40 project_created → scaffold knowledge dir ONLY if tree empty; activity log uses event's knowledge_path; NO invented milestones/todos/celebration — planning routed to planner profile
 - [ ] EV-41 plain/moot events across ALL skills → verification-log-only outcome is produced (sample 5 event types; absence of artifacts asserted)
+- [ ] EV-42 ai_question_asked direction = HUMAN ASKS AI (never AI asks human): fires ONLY when a human (User) authors a message that (a) mention-targets room-active bots, or (b) posts with mode:"ask", or (c) lands in a direct room with active bots; payload {room_id, bot_user_ids = bots expected to ANSWER, mode}; shares ONE group_id with its message_created/attachment trio; routing: mentioned-bot AiProfile when OUTPUT_MESSAGE_PROFILE unset, else analyzer front-door (message_analyzer decides follow-on task/answer). Absence assertions are first-class: bot-authored question posts → ZERO ai_question_asked rows (AI→human questioning is ai_confirm/confirm-cards/approvals, a different mechanism); human message without mentions/ask-mode in non-direct room → only message_created. Drive: REST/G0 replay (msg #4 live-proved the happy trio path).
 
 ## 6. Approval semantics (AP)
 
@@ -295,4 +296,128 @@
 
 ---
 
-### Item tally: 218 semantic checks (AN 15, TP 20, RH 6, TK 20, EV 46, AP 15, DS 7, AT 8, KN 10, IA 12, MS 13, WA 10, XD 12, OR 8, ST 10, HR 6) — versus 191 functional checks in the companion file; together 409 assertions over the system.
+## 20. Project creation & description-driven outputs (PJ)
+
+Ground truth (verified 2026-11-10, `installation` @ cd62fab): `Project`
+callbacks — `before_validation :generate_slug_from_path` (File.basename(path)
+.parameterize) + `normalize_short_code`; `after_create_commit :announce_creation`
+→ `SystemMessage.project_created` posts a system message **only to the meta
+room**, carrying slug + path (NOT the description). The project room is created
+LAZILY via `ensure_project_room!` on first room access (name=slug, private
+mirrored, creator=admin default). `find_or_create_for_path` is the idempotent
+entry. `current_phase` displays default "Phase 1: Project Setup";
+progress_percent default 0. NO server-side AI generation from `description`
+exists — description-driven planning is AGENT-side (workspace→planner, EV-40
+twin) and is tested as behavior, not promised as platform.
+
+- [ ] PJ-01 — create project via path+description → meta-room message appears:
+  system:true, system_type "project_created", body cites slug AND path
+  (existence within one commit cycle)
+- [ ] PJ-02 — announce fidelity: the system message must NOT contain or imply
+  description content, milestones, or stats beyond slug+path — string-diff vs
+  project fields (no-fabrication absence assert)
+- [ ] PJ-03 — slug under stress: paths ending "پروژه جدید" (Persian),
+  "My Project!! 2026", empty basename → parameterize output sane, non-empty,
+  collision-safe; actual fallback behavior documented
+- [ ] PJ-04 — short_code normalization: "rcpt"→"RCPT" stored; blank stays blank
+  (never auto-invented); duplicate code rejected loudly, not silenced
+- [ ] PJ-05 — lazy project room: after creation ZERO Rooms::Project rows; first
+  project-room access → exactly 1 room, name==slug, private==project.private,
+  creator==admin default; room_created meta announce emitted
+- [ ] PJ-06 — fresh project via get_single_project: current_phase default
+  "Phase 1: Project Setup", progress_percent 0, roadmap/recently_completed nil
+  — clean defaults, no empty-string noise in MCP attributes
+- [ ] PJ-07 — output-event twin: with sink configured, creation emits exactly
+  ONE deduped event with correct knowledge_path; sink killed → retried,
+  restored → delivered (OUT plane at project scope)
+- [ ] PJ-08 — analyzer vs the announce: system/bot message → importance 1-2,
+  type bot; NO topic born from an announce line; announce never double-analyzed
+- [ ] PJ-09 — workspace handler chain at creation (EV-40 twin): knowledge dir
+  scaffolded ONLY if tree empty; activity log carries event knowledge_path;
+  planning routed to planner — zero invented milestones/todos by creation
+- [ ] PJ-10 — description-driven planning quality: every planner-generated
+  milestone/todo/note cites a description substring it derives from; rich
+  description (phases/dates/outcomes) → plan reflects them; vague/empty
+  description → clarification or minimal plan — NEVER an invented specific
+  roadmap (hallucination detector)
+- [ ] PJ-11 — description edit semantics (project_updated twin): description
+  change raises material_changes only when scope-like (EV-39 rule);
+  human-set roadmap/current_phase NEVER auto-regenerated or clobbered
+  (merge-not-overwrite on those fields)
+- [ ] PJ-12 — idempotent entry: find_or_create_for_path same path twice → same
+  project id and ZERO extra announce messages (no event storm)
+
+---
+
+## 21. Human-interaction event semantics (HI) — clicks, their events, and the chat anchor
+
+Ground truth: UI/API actions by humans mutate state → after_commit emits the
+outbound event (group_id/event_type/event_id/target_type/content_payload) →
+workspace routes to the per-event skill → the room must show a human-readable
+echo naming actor + kind-labelled ids + the originating chat anchor. These
+items are anchored to replay chats ("after #N, the human clicks X").
+
+- [ ] HI-01 — after #184 (kian's $400 request raised in room 23), human APPROVES:
+  approval_requests row pending→approved + ONE transition-ledger row (actor=2,
+  ts); event approval_request_approved delivered once; workspace executes
+  EXACTLY approved scope (no adjacent spend); echo message cites "#184 approved
+  by kian"; absence: no second approved transition
+- [ ] HI-02 — after #220, human DENIES (booth $99): denied state +
+  approval_request_denied event; NOTHING executed; derived attention dismissed
+  via edit_*; task closed citing denial; echo cites #220; $99 absent from spend
+- [ ] HI-03 — human CANCELS a pending request (crafted on #246 pre-verdict):
+  canceled ≠ denied vocabulary preserved distinctly; same event discipline;
+  requester notified in origin room
+- [ ] HI-04 — double-click approve on #145: second attempt rejected/no-op;
+  exactly 1 approved transition, 1 event, 1 echo; no duplicate execution
+  (idempotence at click level, twin of EV-00b)
+- [ ] HI-05 — approve a company-STATUS ITEM (progress/priority category,
+  #178-style): status→approved via CompanyStatusItem; emitted decision_approved
+  carries target_type=CompanyStatusItem → priority/progress skill handles it,
+  NOT the approval skill (UI-origin twin of EV-07/26); referencing chat
+  descriptions annotated by merge
+- [ ] HI-06 — deny a company-status item (#182-style risk): denied;
+  stale-assumption sweep runs (EV-28 twin); dismisses the blockers citing it
+  (EV-33); echo cites item + origin message
+- [ ] HI-07 — resolve blocker attention (#120 → #122): resolved state;
+  blocker_resolved event → workspace merges "can proceed" into referencing
+  open tasks (merge, not rewrite); resume task routed if owner idle; echo
+  cites #120
+- [ ] HI-08 — resolve decisions_waiting item (#145 flow): event
+  decision_waiting_resolved → durable-decision path AFTER
+  project_decision_records dedupe; echo cites #145 + ADR id
+- [ ] HI-09 — DISMISS an attention item (#179 twin): dismissed wording is
+  "cancelled, not cleared"; referencing tasks annotated, never deleted (EV-05/09
+  anchored at UI click)
+- [ ] HI-10 — resolve a mention item (#248 case): mention_resolved → follow-up
+  commitments from that room get todo OR task (never both, XD-02); echo names
+  mentioned user, no posting-as
+- [ ] HI-11 — confirm via ai_confirm card (#171 pattern): ai_confirm_resolved →
+  propagate downstream only if confirmed action was partial; trackers closed
+  cost→finished (EV-01 twin at UI); rejection path = EV-02/03 twin
+- [ ] HI-12 — record outcome_review by human (#175/213/230 weekly clicks):
+  resolved → knowledge_summary_item after dedupe; failure outcomes → learnings
+  not progress (EV-23/24); echo cites the reviewed decision/todo ids
+- [ ] HI-13 — approve/deny knowledge_proposal via UI (#226/227): approved →
+  adoption in ONE family + activity log w/ knowledge_path; denied → learnings
+  once, re-propagation refused (EV-15/16 anchored); approved proposal NOT
+  re-gated (AP-13)
+- [ ] HI-14 — GUARD CASE (the "approve a project" question): attempt an
+  approve/deny action targeting a PROJECT (target_type=Project) → system
+  refuses cleanly (no such transition exists for projects), NO phantom event,
+  clear explanation echo; project lifecycle signals flow ONLY through
+  real transitions: project_created (#116-adjacent seed) and project_updated
+  material fields (EV-39/40) — assert absence trio: no approval row, no
+  approval_request_* event, no status column change on projects table
+- [ ] HI-15 — payload quality for every HI event: group_id/event_type/event_id/
+  target_type present; content_payload structured, content human-readable or
+  null (never both empty); knowledge-family interactions carry knowledge_path
+- [ ] HI-16 — conservation of actions↔echoes↔events across the FULL replay:
+  every approval_* / *_resolved / *_dismissed event row has exactly one matching
+  room echo message citing its anchor chat id; every human click has ledger +
+  event + echo (or documented suppression for ungated light actions) — SQL/
+  script join over replay DB
+
+---
+
+### Item tally: 247 semantic checks (AN 15, TP 20, RH 6, TK 20, EV 47, AP 15, DS 7, AT 8, KN 10, IA 12, MS 13, WA 10, XD 12, OR 8, ST 10, HR 6, PJ 12, HI 16) — versus 191 functional checks in the companion file; together 438 assertions over the system.

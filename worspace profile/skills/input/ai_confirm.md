@@ -1,7 +1,7 @@
 # AI work awaiting confirmation (resolved / dismissed)
 
 Type: input-processing skill
-Apply when: events `ai_confirm_resolved` or `ai_confirm_dismissed`.
+Apply when: events `ai_confirm_resolved`, `ai_confirm_dismissed`, or `ai_confirm_created`.
 
 ## Procedure
 
@@ -52,3 +52,13 @@ After **each** state-changing tool call, call `create_tool_cal_log` (knowledge-m
 - Never overwrite existing text with `edit_*`: fetch, merge, write back.
 - Attention statuses are exactly `pending` / `resolved` / `dismissed`.
 - Event delivery is at-least-once: re-delivery has the same `group_id` / `event_type` / `event_id`. Check `tool_cal_logs` filtered by `target_entity_id` before acting a second time.
+
+## `ai_confirm_created` (added 2026-11-13)
+
+Apply when: an `ai_confirm_created` event arrives (an AI action just landed awaiting human sign-off).
+
+1. Read the item: `ai_confirm(item_id: <event_id>)`; confirm `status` is pending.
+2. Do NOT auto-resolve and do NOT execute the action on the human's behalf.
+3. Ensure the human can see it: if `room_id` is present and no message referencing it exists, post at most ONE message citing the item title and id (`add_message`). Never more.
+4. `create_tool_cal_log`: "ai_confirm <id> surfaced for human sign-off".
+5. The follow-up is `ai_confirm_resolved` / `ai_confirm_dismissed` — handled by the sections above. Do not pre-execute "just in case".

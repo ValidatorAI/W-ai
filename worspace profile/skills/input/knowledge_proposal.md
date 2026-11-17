@@ -1,7 +1,7 @@
 # Knowledge proposal (resolved / dismissed)
 
 Type: input-processing skill
-Apply when: events `knowledge_proposal_resolved` or `knowledge_proposal_dismissed`.
+Apply when: events `knowledge_proposal_resolved`, `knowledge_proposal_dismissed`, or `knowledge_proposal_created`.
 
 ## Procedure
 
@@ -54,3 +54,12 @@ After **each** state-changing tool call, call `create_tool_cal_log` (knowledge-m
 - Never overwrite existing text with `edit_*`: fetch, merge, write back.
 - Attention statuses are exactly `pending` / `resolved` / `dismissed`.
 - Event delivery is at-least-once: re-delivery has the same `group_id` / `event_type` / `event_id`. Check `tool_cal_logs` filtered by `target_entity_id` before acting a second time.
+
+## `knowledge_proposal_created` (added 2026-11-13)
+
+Apply when: a `knowledge_proposal_created` event arrives.
+
+1. Read the item: `knowledge_proposals(item_id: <event_id>)`.
+2. Adoption happens ONLY on `knowledge_proposal_resolved` — at creation time you read and dedupe, nothing else.
+3. Dedupe pre-check: search the target knowledge families for an equivalent; if content already exists, note the duplicate via `edit_knowledge_proposals` (meta_text) or a room note — do not create anything.
+4. `create_tool_cal_log`: "proposal <id> registered; dedupe-checked against <families>".

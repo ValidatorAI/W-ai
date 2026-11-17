@@ -42,3 +42,7 @@ After **each** state-changing tool call, call `create_tool_cal_log` (knowledge-m
 - Attention statuses are exactly `pending` / `resolved` / `dismissed`; company-status item and approval flows add `approved` / `denied` / `canceled` via events.
 - If the target profile or room is ambiguous, prefer minimal justified action or route a clarification task; never guess identities.
 - Event delivery is at-least-once: re-delivery has the same `group_id` / `event_type` / `event_id`. Check `tool_cal_logs` filtered by `target_entity_id` before acting a second time.
+
+## API-plane origin note (added 2026-11-13)
+
+`project_todo_completed` / `project_todo_reopened` events may now come from the REST/MCP plane as well as the web toggle. The procedure above is unchanged: verify state first (`project_todos(todo_id:)`), close tracked tasks cost→finished, and never self-mark milestones — route `add_outcomes_review` instead.

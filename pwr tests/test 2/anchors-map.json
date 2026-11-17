@@ -1,0 +1,234 @@
+{
+ "anchors": [
+  {
+   "id": "AN-02",
+   "family": "AN",
+   "grade_via": "Arc C"
+  },
+  {
+   "id": "AN-09",
+   "family": "AN",
+   "grade_via": "Arc C"
+  },
+  {
+   "id": "AN-12",
+   "family": "AN",
+   "grade_via": "Arc C"
+  },
+  {
+   "id": "AN-15",
+   "family": "AN",
+   "grade_via": "Arc C"
+  },
+  {
+   "id": "AP-11",
+   "family": "AP",
+   "grade_via": "Arc C"
+  },
+  {
+   "id": "AT-05",
+   "family": "AT",
+   "grade_via": "Arc C"
+  },
+  {
+   "id": "AT-06",
+   "family": "AT",
+   "grade_via": "Arc C"
+  },
+  {
+   "id": "AT-07",
+   "family": "AT",
+   "grade_via": "Arc C"
+  },
+  {
+   "id": "DS-05",
+   "family": "DS",
+   "grade_via": "Arc C"
+  },
+  {
+   "id": "DS-06",
+   "family": "DS",
+   "grade_via": "Arc C"
+  },
+  {
+   "id": "IA-07",
+   "family": "IA",
+   "grade_via": "Arc C"
+  },
+  {
+   "id": "IA-10",
+   "family": "IA",
+   "grade_via": "Arc C"
+  },
+  {
+   "id": "IA-11",
+   "family": "IA",
+   "grade_via": "Arc C"
+  },
+  {
+   "id": "KN-04",
+   "family": "KN",
+   "grade_via": "Arc C"
+  },
+  {
+   "id": "KN-05",
+   "family": "KN",
+   "grade_via": "Arc C"
+  },
+  {
+   "id": "KN-07",
+   "family": "KN",
+   "grade_via": "Arc C"
+  },
+  {
+   "id": "KN-08",
+   "family": "KN",
+   "grade_via": "Arc C"
+  },
+  {
+   "id": "KN-09",
+   "family": "KN",
+   "grade_via": "Arc C"
+  },
+  {
+   "id": "MS-02",
+   "family": "MS",
+   "grade_via": "Arc C"
+  },
+  {
+   "id": "MS-11",
+   "family": "MS",
+   "grade_via": "Arc C"
+  },
+  {
+   "id": "PJ-09",
+   "family": "PJ",
+   "grade_via": "Arc C"
+  },
+  {
+   "id": "PJ-10",
+   "family": "PJ",
+   "grade_via": "Arc C"
+  },
+  {
+   "id": "PJ-11",
+   "family": "PJ",
+   "grade_via": "Arc C"
+  },
+  {
+   "id": "RH-02",
+   "family": "RH",
+   "grade_via": "Arc C"
+  },
+  {
+   "id": "ST-04",
+   "family": "ST",
+   "grade_via": "Arc C"
+  },
+  {
+   "id": "ST-05",
+   "family": "ST",
+   "grade_via": "Arc C"
+  },
+  {
+   "id": "ST-08",
+   "family": "ST",
+   "grade_via": "Arc C"
+  },
+  {
+   "id": "ST-10",
+   "family": "ST",
+   "grade_via": "Arc C"
+  },
+  {
+   "id": "TK-05",
+   "family": "TK",
+   "grade_via": "Arc C"
+  },
+  {
+   "id": "TK-06",
+   "family": "TK",
+   "grade_via": "Arc C"
+  },
+  {
+   "id": "TK-07",
+   "family": "TK",
+   "grade_via": "Arc C"
+  },
+  {
+   "id": "TK-16",
+   "family": "TK",
+   "grade_via": "Arc C"
+  },
+  {
+   "id": "TP-05",
+   "family": "TP",
+   "grade_via": "Arc C"
+  },
+  {
+   "id": "TP-06",
+   "family": "TP",
+   "grade_via": "Arc C"
+  },
+  {
+   "id": "TP-07",
+   "family": "TP",
+   "grade_via": "Arc C"
+  },
+  {
+   "id": "TP-13",
+   "family": "TP",
+   "grade_via": "Arc C"
+  },
+  {
+   "id": "TP-15",
+   "family": "TP",
+   "grade_via": "Arc C"
+  },
+  {
+   "id": "TP-17",
+   "family": "TP",
+   "grade_via": "Arc C"
+  },
+  {
+   "id": "TP-18",
+   "family": "TP",
+   "grade_via": "Arc C"
+  },
+  {
+   "id": "XD-01",
+   "family": "XD",
+   "grade_via": "Arc C"
+  },
+  {
+   "id": "XD-02",
+   "family": "XD",
+   "grade_via": "Arc C"
+  },
+  {
+   "id": "XD-07",
+   "family": "XD",
+   "grade_via": "Arc C"
+  }
+ ],
+ "guards": [
+  "M1",
+  "M1a",
+  "M5",
+  "M6",
+  "M7",
+  "M8",
+  "M10",
+  "F17",
+  "F18",
+  "F19",
+  "F20b",
+  "S8",
+  "S9",
+  "O-5",
+  "AP-11",
+  "KN-09",
+  "F21",
+  "F22"
+ ]
+}

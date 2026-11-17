@@ -1,0 +1,195 @@
+# PWR API Reference — endpoints, bearer tokens, inputs, outputs
+
+> Repo: `~/Documents/codes/Pavel/W/pwr` (github.com/ValidatorAI/bonfire), branch
+> `installation` @ cd62fab. Base URL of the live dev server: `http://localhost:3000`.
+> Written 2026-11-10; every fact below was verified against the code
+> (`config/routes.rb`, `app/controllers/api/*`) and the running server.
+> Token VALUES are never printed here — only the environment variable each API
+> reads its secret from (all are set in the repo's `.env`).
+
+---
+
+## 0. The three API surfaces & current access state
+
+| Surface | Protocol | Auth | Current state |
+|---|---|---|---|
+| `/api/*` | REST JSON (ActionController::API) | Bearer = `OUTPUT_EVENTS_TOKEN` | **DISABLED at route-draw time** by `DISABLE_API_ROUTES=true` in `.env` → every `/api/*` returns 404 (verified live). Flip to `false` + restart to enable. |
+| `/mcp`, `/action-mcp`, `/read-mcp`, `/knowledge-mcp`, `/task-mcp`, `/config-mcp` | MCP over HTTP: JSON-RPC 2.0 | Bearer = `MCP_AUTH_TOKEN` (+ `Mcp-Session-Id` from `initialize`) | LIVE and reachable (initialize handshake verified) |
+| Web routes (`/rooms`, `/company/...`, `attention_items`, `approval_requests/approve|deny|...`) | HTML, Turbo | Session cookie login (NOT bearer) | LIVE (302 → sign-in when unauthenticated) |
+
+Enable REST without losing anything else:
+```bash
+sed -i 's/DISABLE_API_ROUTES=true/DISABLE_API_ROUTES=false/' .env   # or edit .env
+# restart puma (tmp/restart.txt touch works via RESTART_TRIGGER_PATH)
+```
+
+---
+
+## 1. REST JSON API (`/api/...`)
+
+**Auth (all endpoints):** header `Authorization: Bearer <OUTPUT_EVENTS_TOKEN>`.
+From `api/base_controller.rb`: missing header → 401 `{"error":"Unauthorized"}`;
+wrong → 401 same shape (no oracle); server var unset → 500
+`{"error":"Server misconfigured"}`. ⚠ This is the SAME secret used for webhook
+identity — one shared server token, not per-user (attribution is by `user_id`
+params you pass, see §1.4).
+
+**Conventions (verified from controllers):**
+- Errors: `{"error": "<message>"}` with `404` (not found — lookups are `find_by`,
+  never raise), `400` (missing/unsupported params), `422` (model validation,
+  `errors.full_messages.to_sentence`).
+- Lists that paginate wrap: `{"count": N, "page": p, "per_page": n, "<items>": [...]}`
+  when `page` is given (default per_page 40, clamped 1–200), else `{"count": N, "<items>": [...]}` or a bare array (rooms).
+- Deletes: `204 No Content` (empty body).
+- `project_id` / room lookup accepts **id OR slug** (`find_project`: `find_by(id:) || find_by(slug:)`).
+- Nested duplication: the whole rooms subtree exists both at `/api/rooms/...` and
+  under `/api/projects/:project_id/rooms/...` (same behavior, project-scoped).
+
+### 1.2 Endpoint table
+
+Legend: verb+path · inputs · output.
+
+**Projects / rooms / threads / search**
+| Endpoint | Inputs | Output |
+|---|---|---|
+| `GET /api/projects` | – | array of project public attrs: `id,name,slug,path,description,private,short_code,current_phase,progress_percent,roadmap,recently_completed,budget_total,budget_spent,created_at,updated_at,display_name` |
+| `GET /api/projects/:id` | id or slug | one project (same shape); 404 `Project not found` |
+| `GET /api/rooms` (or under `/api/projects/:pid/rooms`) | – | array: `id,name,type,description,private,parent_id,project_id,creator_id,archived_at,created_at,updated_at` |
+| `GET /api/rooms/:id` | id | one room (fields above) |
+| `GET /api/rooms/:id/threads` | id | child rooms (`parent_id = room.id`, ordered) — same room fields |
+| `GET /api/rooms/search?q=` | `q` required (LIKE, escaped) | rooms ranked by name relevance; empty q → 400 `Missing query param: q` |
+
+**Messages**
+| Endpoint | Inputs | Output |
+|---|---|---|
+| `GET /api/rooms/:rid/messages` | `page`,`per_page`(≤200) | `{count, [page, per_page,] messages:[{id,room_id,creator_id,creator_type,system,system_type,created_at,updated_at}]}` (body text served via show/attachment routes) |
+| `GET /api/messages/:id` (flat, ids globally unique; also nested) | – | serialized message |
+| `POST /api/rooms/:rid/messages` | `user_id` (must exist), at least one of `body` / `attachment` (base64/multipart) → 400 if both blank | created message, `201`; created with `create_with_attachment!`, client_message_id auto-uuid |
+| `PATCH /api/messages/:id` | message fields | updated message ⚠ NOTE: message EDIT exists on REST while the MCP surface has none (gap-ledger item 3 — REST is the fix path) |
+| `DELETE /api/messages/:id` | – | 204 |
+| `GET /api/messages/:id/attachment` | `disposition=attachment` optional | raw bytes (filename/content_type); 404 if none |
+
+**Presence-style actions & human decisions**
+| Endpoint | Inputs | Output |
+|---|---|---|
+| `POST /api/rooms/:rid/actions` | `user_id`, `action_type` ∈ {`typing_start`,`typing_stop`} | `202 {"status":"ok","action":...}`; broadcasts over ActionCable; unsupported type → 400 listing allowed |
+| `POST /api/rooms/:rid/decisions` | `user_id`, `approval_request_id`, `decision` ∈ {`approve`,`confirm`,`deny`,`cancel`}, optional `note` | runs the model transition with actor; returns approval request fields `id,room_id,message_id,request_type,status,requested_at,resolved_at,resolved_by_id`; bad decision → 400 allowed-list |
+
+**Approval requests**
+| Endpoint | Inputs | Output |
+|---|---|---|
+| `GET /api/rooms/:rid/approval_requests` | page/per_page | wrapped list of `{id,room_id,message_id,request_type,status,requested_at,resolved_at,resolved_by_id,created_at,updated_at, decision_text}` |
+| `GET/PATCH/DELETE /api/approval_requests/:id` (also nested) | PATCH: `message_id,request_type,status,requested_at,resolved_at,resolved_by_id, payload:{...}` | object / 204 |
+| `POST /api/rooms/:rid/approval_requests` | fields above | 201 object |
+
+**Topics & analysis plane**
+| Endpoint | Inputs | Output |
+|---|---|---|
+| `GET/POST/PATCH/DELETE /api/topics[/:id]` | permit: `project_id,parent_topic_id,name,related_topics,active,importance_level,memory,state,need_an_action,required_actions` | topic object; validation → 422 |
+| `GET/POST/PATCH/DELETE /api/message_analysis[/:id]` | `message_id,importance_level,message_content_summary,message_type,tags,is_a_response` | analysis object (1:1 unique per message_id — REST honors the same index) |
+| `GET/POST/PATCH/DELETE /api/room_history_topics[/:id]` (alias `/api/room_history`) | room/topic fields | snapshot objects |
+| `GET/POST/PATCH/DELETE /api/message_topics[/:id]` | `message_id,topic_id` (+labels ignored) | link objects |
+
+**Tasks (`AiTask`)**
+| Endpoint | Inputs | Output |
+|---|---|---|
+| `GET /api/tasks` | filters (`project_id,room_id,topic_id,dispatched,finished,...` via `filter_tasks`) | `{count, tasks:[full row as_json]}` newest-first |
+| `GET /api/tasks/:id` | – | full task row (`as_json` — ALL columns, incl. `actual_task_context`) |
+| `POST /api/tasks` | permit: `adder_profile,token_used,token_budget,usd_used,usd_budget,room_id,project_id,description,assigneee_profile,proposed_task_context,actual_task_context,dispatched,finished,added_to_kanban,runned,topic_id,parent_task_id,grand_parent_id,importance,level` | 201 task; 422 on validation |
+| `PATCH /api/tasks/:id` | same permit list | updated task ⚠ REST permits fields the MCP `update_ai_task` locks (budgets, level, parents) — REST/MCP surface divergence; treat REST as admin plane |
+| `DELETE /api/tasks/:id` | – | 204 |
+| `GET /api/tasks/:id/children` / `/parents` | – | descendants / ancestor rows |
+| `POST|PATCH /api/tasks/task_cost` | `task_id, token_used, usd_used` | re-serialized task with rolled-up cost (`apply_task_cost!`) |
+
+**Attention items**
+| Endpoint | Inputs | Output |
+|---|---|---|
+| `GET /api/attention_items` | `category,status,project_id,room_id,user_id` filters + page/per_page | wrapped list of `{id,category,title,meta_text,due_at,overdue,status,project_id,room_id,user_id,source_id,source_type,target_id,target_type,action_label,ai_confirm,created_at,updated_at,resolved_at,resolved_by_id}` |
+| `POST/PATCH/DELETE /api/attention_items[/:id]` | category fields (incl. status `pending/resolved/dismissed`) | object / 204 |
+
+**Company status plane**
+| Endpoint | Inputs | Output |
+|---|---|---|
+| `GET /api/company_status_periods/current` · `/by_slug/:slug` · `/by_name` | – or `name=` | period object(s) |
+| `GET/POST/PATCH/DELETE /api/company_status_periods[/:id]` | `name,...` (add/edit contract: create requires `name`, update requires `period_id`) | period / 204 |
+| `GET /api/company_status_items` | `by_period?period_id=`, `advanced_filter?<...>` | item list |
+| `POST/PATCH/DELETE /api/company_status_items/:id` | permit: `company_status_period_id,category,position,title,subtitle,text,description,detail_category,owner,target_date,status,impact,percent,color,evidence,severity` (+more) | item / 204 |
+
+**AI-config plane (READ-ONLY: index + show for each)**
+`/api/ai_profiles` (`id,profile_name,bot,bot_name,editable,tool_sets_editable,main_model,fallback_model,cloned_from,created_at,updated_at`), `/api/ai_settings`, `/api/mcps`, `/api/tools`, `/api/skills`, `/api/ai_profile_tools`, `/api/ai_profile_skills`, `/api/ai_profile_mcps`.
+Mutations for these happen via the web AI-admin screens, not REST.
+
+**Per-project entities** — identical CRUD shape (`GET /index`, `GET /:id`, `POST`, `PATCH`, `DELETE` → 204), available under `/api/projects/:project_id/<resource>`; both a long and a short path exist (e.g. `project_todos` and `todos`). Resources + notable params (verified where controllers define them):
+- `users` (read-only index/show: project_users join rows)
+- `todos` — permit `title,meta_text,completed,completed_at,position` (+ owner/due fields via model)
+- `milestones`, `bottlenecks` — standard fields (title/state/target_date; severity)
+- `notes` — content fields
+- `adrs` (=`project_adrs`) — `identifier,title,status,decision_date,file_path,...`
+- `knowledge_items` — `title,...`; `external_assets` — `title,url,description`;
+  `knowledge_activities` — `actor_name,action_text,target_path`;
+  `directory_items` — `name,item_type,parent...`
+- `all_hands_takeaways / _decisions / _action_items` — text/assignee/due_date/completed/basis/impact/badge
+
+### 1.4 Attribution caveat
+REST calls act as the server, not as a user: the actor is whatever `user_id` you
+pass (messages, actions, decisions) — there is no per-token identity. Anything
+needing trustworthy attribution should go through MCP (token + profile config),
+or REST calls must be proxied by a trusted backend that injects user_id.
+
+---
+
+## 2. MCP surface (live now)
+
+**Transport:** HTTP POST, JSON-RPC 2.0, headers:
+```
+Content-Type: application/json
+Accept: application/json, text/event-stream
+Authorization: Bearer <MCP_AUTH_TOKEN>
+Mcp-Session-Id: <id returned by initialize>     # required on subsequent calls
+```
+
+**Endpoints (scopes):** `/mcp` 163 tools · `/action-mcp` 142 · `/read-mcp` 78 ·
+`/knowledge-mcp` 29 · `/task-mcp` 8 · `/config-mcp` 16 (live counts 2026-11-09/10).
+
+**Methods & shapes (verified):**
+- `initialize` → `{"jsonrpc":"2.0","id":1,"result":{"protocolVersion":"2024-11-05","capabilities":{"tools":{}},"serverInfo":{"name":"space-mcp","version":"1.0.0"}}}`
+- `tools/list` → `{"result":{"tools":[{name, description, inputSchema(JSON Schema)}]}}` (canonical names only; aliases callable but unlisted)
+- `tools/call` `{"name":"add_message","arguments":{"room_name":"receipts-build","user_name":"kian","body":"...","project_id":7}}` → `{"result":{"content":[{"type":"text","text":"<json result or error string>"}],"isError":false|true}}`
+- Errors: unknown tool / bad scope → JSON-RPC-level error object; domain errors come back as `isError:true` text (404-style "not found" strings from the tool layer); auth failures are HTTP-level (401).
+- Fuzzy inputs: name fields (`project_id`|`project_name`, `user_name`, `room_name`) resolved by `Mcp::FuzzyMatcher`; ambiguous → error with candidates.
+
+Minimal probe:
+```bash
+TOK=$(grep '^MCP_AUTH_TOKEN' .env | cut -d= -f2- | tr -d '"')
+curl -s -X POST http://localhost:3000/read-mcp \
+  -H "Content-Type: application/json" -H "Accept: application/json, text/event-stream" \
+  -H "Authorization: Bearer $TOK" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}'
+```
+
+---
+
+## 3. Web routes (session cookie — for completeness, no bearer)
+
+Key human-interaction endpoints the roadmap's HI tests click through (after
+login as admin — default creds come from `DEFAULT_ADMIN_*` in `.env`):
+- `PATCH /approval_requests/:id/{approve,confirm,deny,cancel}` — the HI-01…04 clicks
+- `PATCH /attention_items/:id/{resolve,dismiss}` — HI-07…09
+- `PATCH /attention_items/:id` (update)
+- `GET/POST /pooling_messages` — long-poll message fetch (the bot client loop)
+- `POST /rooms/:id/:bot_key/messages` — bot-authored post by per-bot key (not the
+  shared token) — used by W-ai bots' pollers
+- `POST /messages/:id/boosts`, `/searches` (+`/ask`, `/clear`), `/unfurl_link`,
+  rooms `refresh/settings/involvement/clear`, opens/closeds/directs,
+  `GET /company/...` pages, ai-admin CRUD, `/qr_code`, `/join/:code`,
+  PWA `/webmanifest` + `/service-worker`, push subscriptions (+ test_notifications).
+
+---
+
+## 4. What I verified vs what is transcribed-from-code
+
+- Verified live: REST gated → 404s; MCP initialize + tools/list counts; `/up` 200;
+  token env vars SET (values not exposed); auth logic (base_controller source).
+- Transcribed from source (accurate, not yet exercised because the gate is off):
+  every §1 input/output row. When the gate is flipped, the roadmap's AUT-03 re-run
+  plus a read-only sweep of each §1 group confirms them end-to-end.

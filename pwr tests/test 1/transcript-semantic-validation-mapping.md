@@ -2,7 +2,7 @@
 
 > Companion files: `pwr-feature-test-conversations.md` (v1, 161 messages, ids
 > 101–261), `transcript-v2-completing-replay.md` (v2, chats 262–334 + harness
-> actions HA-01…HA-104), `pwr-semantic-checklist.md` (218 semantic items).
+> actions HA-01…HA-104), `pwr-semantic-checklist.md` (247 semantic items).
 > Sections A–N below map semantic items to **v1** chats; sections O–P extend the
 > map to **v2** chats and probes so the full 218 items have a driver and a
 > desired-state assertion.
@@ -314,6 +314,46 @@ assign a driver to all 218 semantic items.
 | ST-10 | period binding explicit | HA-92/99 | zero items attached to non-current periods |
 | HR-01…06 | harness conventions | HA-97 | dry-run logs exist for every D7/D9 item; evidence table complete; noise budget computed; scoreboard filled; regression anchors run first |
 
+
+### Project creation & description-driven outputs (PJ) — phase: P1 seed rows, P4 planner rows, P5 sink row
+
+| ID | Test | Driving element | Desired outcome |
+|---|---|---|---|
+| PJ-01 | creation announce exists | seed/HA-105(a) | meta-room system message (system:true, system_type project_created) citing slug+path within one commit cycle |
+| PJ-02 | announce fidelity (no fabrication) | HA-105(a) | message body contains NOTHING beyond slug+path — diff vs project fields |
+| PJ-03 | slug stress | HA-105(d) | Persian/noisy/empty basenames → sane unique slugs; fallback documented |
+| PJ-04 | short_code rules | HA-105 | lower→UPPER stored; blank stays blank; duplicates rejected loudly |
+| PJ-05 | lazy project room | HA-105 first open | zero room at creation; one Rooms::Project on first access, attrs mirror project; room_created announce |
+| PJ-06 | fresh-project MCP attributes | get_single_project post-create | phase default "Phase 1: Project Setup", progress 0, roadmap nil — clean |
+| PJ-07 | creation output-event | HA-90 sink + HA-105 | exactly one deduped event, knowledge_path correct; kill/restore retry works |
+| PJ-08 | analyzer vs announce | replay of announce | importance 1-2, type bot; NO topic from announce; no double-analysis |
+| PJ-09 | workspace chain at creation | EV-40 twin | scaffold only-if-empty; activity w/ event path; planner routing; zero invented items |
+| PJ-10 | description→plan traceability (hallucination detector) | HA-105(a) vs (b)(c) | rich desc → plan cites substrings; vague/empty → question or minimal plan, never invented specifics |
+| PJ-11 | description edit doesn't clobber | HA-57 twin | material only if scope-like; human roadmap/current_phase never auto-regenerated |
+| PJ-12 | idempotent path entry | HA-105(e) | same path twice → same id, zero extra announces (no storm)
+
+
+### Human-interaction event semantics (HI) — anchored to chat numbers ("after #N, the human clicks X")
+
+| ID | Click / guard | Anchor chat → action | Desired outcome = state change + echo |
+|---|---|---|---|
+| HI-01 | APPROVE approval request | after #184, kian approves in room 23 | pending→approved, 1 ledger row (actor=2), approval_request_approved once, workspace executes exactly approved scope, echo cites "#184 approved by kian" |
+| HI-02 | DENY approval request | after #220, kian denies | denied, NOTHING executed ($99 absent in spend), derived attention dismissed, task closed citing denial, echo cites #220 |
+| HI-03 | CANCEL pending | crafted on #246 pre-verdict | canceled state distinct from denied (vocabulary audit); requester notified in origin room |
+| HI-04 | double-click approve | #145 clicked twice | second attempt no-op; exactly 1 transition + 1 event + 1 echo (click-level idempotence) |
+| HI-05 | approve company-STATUS ITEM | #178-style progress/priority item | decision_approved w/ target_type=CompanyStatusItem → priority skill NOT approval skill (EV-07/26 twin at UI); referencing chats merge-annotated |
+| HI-06 | deny company-status item | #182-style risk | denied; stale-assumption sweep (EV-28); citing blockers dismissed (EV-33); echo cites item+origin msg |
+| HI-07 | resolve blocker attention | #120 → click | resolved + blocker_resolved → "can proceed" merged into open tasks; resume-task if owner idle; echo cites #120 |
+| HI-08 | resolve decisions_waiting | #145 flow click | decision_waiting_resolved → durable-decision path AFTER records dedupe; echo cites #145 + ADR id |
+| HI-09 | DISMISS attention item | #179 twin click | dismissed = "cancelled, not cleared" wording; tasks annotated, none deleted |
+| HI-10 | resolve mention | #248 case | follow-up commitment gets todo OR task (never both); echo names user, never posting-as |
+| HI-11 | ai_confirm card confirm | #171 pattern | propagate only if partial; trackers cost→finished; rejection → EV-02/03 twin |
+| HI-12 | outcome_review weekly click | #175/213/230 | summary captured after dedupe; failure→learnings not progress; echo cites reviewed ids |
+| HI-13 | proposal approve/deny via UI | #226/227 | one-family adoption + activity w/ path; denial → learnings once + re-propagation refused; no double gate |
+| HI-14 | GUARD: approve/deny a PROJECT | attempt on project 7/8 | REFUSED — no such transition; absence trio: no approval row, no approval_request_* event, no projects.status mutation; lifecycle only via project_created/updated |
+| HI-15 | payload quality | all HI events | group_id/event_type/event_id/target_type set; content_payload structured, content human or null (never both blank); knowledge_path on knowledge flows |
+| HI-16 | conservation across replay | whole run after D11 | every *_approved/_resolved/_dismissed event joins exactly one echo message citing its anchor chat id; every click → ledger+event+echo (documented suppression for light actions) |
+
 ## P. Validated by v2 EVENT-INJECTION (the 46 workspace handler items)
 
 | ID(s) | Injected event | Desired handler outcome (+ forbidden twin) | HA |
@@ -340,11 +380,12 @@ assign a driver to all 218 semantic items.
 | EV-37,38 | todo completed/reopened | tracker close via cost→finished; milestone routing not self-mark; correction merge not delete | HA-55, HA-56 |
 | EV-39,41 | project_updated cosmetic/material; moot events | cosmetic→NOTHING; single material_changes; verification-log-only ×5 types | HA-57, HA-59 |
 | EV-40 | project_created (empty dir) | knowledge scaffold only-if-empty; activity with event path; route to planner; zero invented milestones | HA-58 |
+| EV-42 | human post w/ bot mention or mode:"ask" (REST replay beats #116/#125-class; live G0 msg #4) | ai_question_asked recorded ONLY for human authors, bot_user_ids = answering bots, trio shares one group_id; bot-authored question → ZERO rows; plain human post → message_created only | #116-class beats; smoke proven |
 
 ## Q. Full-coverage statement (machine-checkable)
 
 v1 chats (101–261) + mapping §A–L → 112 items · v2 chats (262–334) → §O rows ·
-v2 event-injection & harness → §P rows + §M pointers. Union covers **218/218**
-semantic items; every item has exactly one primary driver and a desired-state
+v2 event-injection & harness → §P rows + §M pointers. Union covers **247/247**
+semantic items (247/247 incl. the PJ and HI blocks); every item has exactly one primary driver and a desired-state
 assertion. Re-audit: parse §A–L, §O, §P id columns against
 `pwr-semantic-checklist.md` ids; expected uncovered = ∅.
